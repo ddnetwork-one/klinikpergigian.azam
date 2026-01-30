@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="bm">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klinik Pergigian Azam</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --secondary: #0ea5e9; 
+            --accent: #14b8a6; 
+            --text-dark: #1e293b;
+            --text-light: #475569;
+            --bg-white: #ffffff;
+            --bg-offwhite: #f8fafc;
+            --radius-lg: 16px; 
+            --radius-md: 12px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
+            --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 12px 24px rgba(2, 132, 199, 0.15);
+            --shadow-toast: 0 10px 30px -5px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Reset & Base --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-offwhite);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-size: 16px; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--text-dark); line-height: 1.2; letter-spacing: -0.02em; }
+        a { text-decoration: none; color: inherit; transition: var(--transition); }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; object-fit: cover; }
+        
+        /* Container */
+        .container { width: 95%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- Header & Navigation --- */
+        header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 0; 
+            box-shadow: var(--shadow-sm);
+            transition: padding 0.3s ease;
+        }
+
+        header.shrink { padding: 10px 0; } 
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo { 
+            display: flex; align-items: center; gap: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+        }
+
+        .logo-img {
+            height: 50px; width: 50px; border-radius: 50%; object-fit: cover;
+            background-color: white; border: 2px solid var(--primary-light);
+            transition: height 0.3s ease;
+        }
+        
+        header.shrink .logo-img { height: 42px; width: 42px; }
+
+        .logo span {
+            font-weight: 800; color: var(--primary);
+            font-size: 1.3rem; line-height: 1.1;
+            transition: font-size 0.3s ease;
+        }
+        header.shrink .logo span { font-size: 1.15rem; }
+
+        .nav-menu { display: flex; gap: 30px; align-items: center; }
+        
+        .nav-link {
+            font-weight: 600; font-size: 0.95rem; color: var(--text-light);
+            position: relative; cursor: pointer; padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active { color: var(--primary); }
+        
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 3px; bottom: -4px; left: 0;
+            background: var(--primary); transition: width 0.3s ease; border-radius: 3px;
+        }
+        
+        .nav-link.active::after { width: 100%; }
+
+        /* Language Switcher */
+        .lang-switch {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.8rem; font-weight: 700; color: var(--primary);
+            cursor: pointer; padding: 8px 14px; background: var(--primary-light); 
+            border-radius: 50px; text-transform: uppercase; border: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .lang-switch:hover { background: #fff; border-color: var(--primary); }
+
+        /* --- BUTTONS --- */
+        .btn-modern {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white; 
+            padding: 12px 28px; 
+            border-radius: 50px; 
+            font-weight: 600; font-size: 1rem;
+            border: none; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+            display: inline-flex; align-items: center; gap: 10px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn-google-review {
+            background: #fff; color: #4285F4; 
+            padding: 12px 24px; border-radius: 50px; 
+            font-weight: 600; font-size: 0.95rem;
+            border: 1px solid #e2e8f0; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-google-review:hover { background: #f8fafc; border-color: #4285F4; transform: translateY(-2px); }
+
+        /* Map Buttons */
+        .btn-map-group { display: flex; gap: 15px; margin-top: 15px; }
+        
+        .btn-map {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+            transition: var(--transition); cursor: pointer; color: white;
+        }
+
+        .btn-google { background: #4285F4; box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3); }
+        .btn-google:hover { background: #3367d6; }
+
+        .btn-waze { background: #33CCFF; box-shadow: 0 4px 10px rgba(51, 204, 255, 0.3); }
+        .btn-waze:hover { background: #29b6e8; }
+
+        .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+
+        /* --- Page Switching Logic --- */
+        .page {
+            display: none; 
+            animation: fadeInPage 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            flex: 1;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+        .page.active { display: block; }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- HOME PAGE STYLES --- */
+        .hero-section {
+            padding: 60px 0; 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px; 
+            align-items: center;
+        }
+        .hero-text h1 { 
+            font-size: 3rem; 
+            margin-bottom: 20px; 
+            color: var(--primary-dark); 
+            line-height: 1.1;
+        } 
+        .hero-text p { 
+            font-size: 1.1rem; 
+            color: var(--text-light); 
+            margin-bottom: 30px; 
+            max-width: 500px;
+        }
+        
+        .hero-img { 
+            position: relative; 
+            z-index: 1;
+        }
+        .hero-img img { 
+            border-radius: 24px; 
+            box-shadow: 20px 20px 0px var(--primary-light); 
+            transform: rotate(-2deg);
+            transition: transform 0.5s ease;
+        }
+        .hero-img:hover img { transform: rotate(0deg); }
+
+        /* --- ABOUT PAGE STYLES --- */
+        .about-hero { padding: 50px 0 20px; text-align: center; }
+        .about-hero h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 40px 0; align-items: center; }
+        .about-img img { border-radius: 20px; box-shadow: var(--shadow-md); }
+        .about-text h2 { font-size: 1.8rem; margin-bottom: 20px; }
+        .check-list li { margin-bottom: 15px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
+        .check-list i { color: var(--accent); font-size: 1.1rem; background: #f0fdfa; padding: 8px; border-radius: 50%; }
+
+        /* --- SERVICES PAGE STYLES --- */
+        .services-hero { padding: 50px 0 30px; text-align: center; background: white; border-radius: 0 0 40px 40px; margin-bottom: 30px; box-shadow: var(--shadow-sm); }
+        .services-hero h1 { font-size: 2.5rem; color: var(--primary-dark); }
+        .service-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .service-card {
+            background: white; border-radius: var(--radius-lg); padding: 30px;
+            transition: var(--transition); 
+            border: 1px solid #f1f5f9;
+        }
+        .service-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: var(--shadow-hover); 
+            border-color: var(--primary-light);
+        }
+        .service-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
+        .s-icon { 
+            font-size: 1.8rem; color: white; margin-bottom: 20px; 
+            background: var(--primary); width: 60px; height: 60px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 16px; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        }
+
+        /* --- BOOK PAGE STYLES --- */
+        .book-grid {
+            display: grid; 
+            grid-template-columns: 1.5fr 1fr; 
+            gap: 40px;
+            margin: 20px auto 60px; 
+            align-items: start;
+        }
+        
+        .form-section {
+            background: white; border-radius: var(--radius-lg); overflow: hidden;
+            box-shadow: var(--shadow-md); padding: 40px;
+            border: 1px solid #e2e8f0;
+            order: 1; 
+        }
+        
+        .map-section {
+            background: white; border-radius: var(--radius-lg); overflow: hidden;
+            box-shadow: var(--shadow-md); border: 1px solid #e2e8f0;
+            position: sticky; top: 100px; 
+            order: 2; 
+        }
+
+        .map-header { padding: 25px; background: var(--primary-dark); color: white; }
+        .map-header h3 { color: white; margin: 0; font-size: 1.3rem; }
+        .map-header p { font-size: 0.9rem; opacity: 0.9; margin: 8px 0 0 0; }
+        
+        .map-frame { width: 100%; height: 350px; border: none; filter: grayscale(20%); transition: filter 0.3s; }
+        .map-section:hover .map-frame { filter: grayscale(0%); }
+        
+        .map-actions { padding: 25px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
+
+        .form-section h3 { margin-bottom: 25px; font-size: 1.5rem; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; }
+        
+        .input-group { margin-bottom: 20px; }
+        .input-group label { 
+            display: block; font-weight: 600; margin-bottom: 8px; 
+            font-size: 1rem; color: var(--text-dark); 
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px;
+            font-family: inherit; transition: var(--transition); background: #fdfdfd;
+            font-size: 16px; color: var(--text-dark);
+        }
+        
+        .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+        }
+
+        /* --- THANK YOU PAGE STYLES --- */
+        .thank-you-section {
+            text-align: center;
+            padding: 120px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: var(--radius-lg);
+            margin-top: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+        .ty-icon {
+            font-size: 6rem;
+            color: #10b981;
+            margin-bottom: 20px;
+            background: #d1fae5;
+            width: 120px; height: 120px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+        }
+        .ty-title { font-size: 2.5rem; color: var(--text-dark); margin-bottom: 15px; }
+        .ty-msg { font-size: 1.2rem; color: var(--text-light); max-width: 600px; margin: 0 auto 40px; line-height: 1.6; }
+
+        /* Footer */
+        footer { background: #0f172a; color: #94a3b8; padding: 40px 0; margin-top: auto; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .footer-logo { font-weight: 700; color: white; font-size: 1.2rem; }
+
+        /* --- IMPROVED TOAST NOTIFICATIONS --- */
+        #toast-container {
+            position: fixed;
+            bottom: 30px;
+            /* CHANGED: Moved to LEFT to balance with WA button on Right */
+            left: 30px; 
+            right: auto;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .toast {
+            background: white;
+            min-width: 320px;
+            max-width: 380px;
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-toast);
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .toast-icon-box {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .toast-message {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .toast-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .toast-close:hover { color: #64748b; }
+
+        /* Type Variations */
+        .toast.warning .toast-icon-box {
+            background-color: #fef3c7; color: #d97706;
+        }
+        .toast.success .toast-icon-box {
+            background-color: #d1fae5; color: #059669;
+        }
+        .toast.error .toast-icon-box {
+            background-color: #fee2e2; color: #dc2626;
+        }
+
+        /* --- CHANGED: FLOATING WHATSAPP ON RIGHT --- */
+        .float-wa {
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; /* Changed from left: 30px */
+            background-color: #25D366;
+            color: #FFF; border-radius: 50px; text-align: center; font-size: 32px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); 
+            z-index: 100; /* Ensure it's below mobile menu */
+            display: flex; align-items: center; justify-content: center;
+            width: 65px; height: 65px; transition: var(--transition); text-decoration: none;
+        }
+        .float-wa:hover { transform: scale(1.1); background-color: #1fad55; }
+
+        /* Spinner */
+        .spinner {
+            width: 20px; height: 20px;
+            border: 3px solid #ffffff;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .book-grid { grid-template-columns: 1fr; }
+            .form-section { order: 1; }
+            .map-section { order: 2; position: static; }
+            .map-frame { height: 300px; }
+            .hero-text h1 { font-size: 2.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+                background: rgba(255,255,255,0.98); backdrop-filter: blur(15px);
+                flex-direction: column; padding-top: 90px;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s;
+                align-items: flex-start; padding-left: 40px;
+                z-index: 1001; /* Higher than WA button */
+            }
+            .nav-menu.active { right: 0; }
+            .nav-menu li { width: 100%; margin-bottom: 25px; }
+            .mobile-toggle { display: block; z-index: 1002; }
+            
+            .hero-section { grid-template-columns: 1fr; text-align: center; padding: 30px 0; gap: 40px; }
+            .hero-text h1 { font-size: 2rem; }
+            .hero-text p { font-size: 1rem; margin: 0 auto 25px; }
+            .hero-img { max-width: 300px; margin: 0 auto; }
+            .hero-img img { transform: rotate(0deg); box-shadow: 10px 10px 0px var(--primary-light); }
+
+            .about-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .about-img { order: -1; } 
+            .check-list li { justify-content: center; }
+            
+            .services-hero { padding: 40px 20px; border-radius: 0; }
+            .services-hero h1 { font-size: 2rem; }
+            .service-grid-container { grid-template-columns: 1fr; }
+            
+            .btn-map-group { flex-direction: column; }
+            .date-time-group { grid-template-columns: 1fr; } 
+            
+            /* Mobile Float WA & Toast */
+            .float-wa { 
+                bottom: 20px; 
+                right: 20px; 
+                width: 55px; height: 55px; font-size: 28px; 
+            }
+            
+            .form-section, .map-section { padding: 25px; }
+            .map-frame { height: 250px; }
+
+            /* Mobile Toast: Center Bottom */
+            #toast-container {
+                left: 20px; right: 20px; bottom: 90px; /* Moved up to avoid WA button overlap */
+            }
+            .toast { min-width: auto; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header id="mainHeader">
+        <div class="container nav-container">
+            <div class="logo" onclick="switchPage('home')">
+                <img src="https://raw.githubusercontent.com/ddnetwork-ent/clinic-azam-dental/main/IMG_2260.JPG" alt="Klinik Pergigian Azam" class="logo-img">
+                <span>Klinik Pergigian Azam</span>
+            </div>
+            
+            <div class="mobile-toggle" id="mobileToggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li>
+                        <div class="lang-switch" onclick="toggleLanguage()">
+                            <i class="fa-solid fa-globe"></i> <span id="current-lang">BM</span>
+                        </div>
+                    </li>
+                    <li><a class="nav-link active" onclick="switchPage('home')" data-i18n="nav-home">Utama</a></li>
+                    <li><a class="nav-link" onclick="switchPage('about')" data-i18n="nav-about">Tentang</a></li>
+                    <li><a class="nav-link" onclick="switchPage('services')" data-i18n="nav-services">Perkhidmatan</a></li>
+                    <li><button class="btn-modern" onclick="switchPage('book')"><span data-i18n="btn-book">Temujanji</span> <i class="fa-solid fa-calendar-check"></i></button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="mainContent">
+
+        <!-- ==================== PAGE: HOME ==================== -->
+        <section id="home" class="page active">
+            <div class="container">
+                <div class="hero-section">
+                    <div class="hero-text">
+                        <h1 data-i18n="hero-title">Seri Senyuman Bermula Di Sini</h1>
+                        <p data-i18n="hero-desc">Nikmati perawatan pergigian premium di Sungai Petani. Kami menggabungkan rawatan pakar dengan sentuhan lembut.</p>
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
+                            <button class="btn-modern" onclick="switchPage('book')"><span data-i18n="btn-book-main">Buat Temujanji</span></button>
+                            <a href="https://www.google.com/search?q=klinik+pergigian+azam+sp+saujana&sca_esv=711918703c73458c&sxsrf=AE3TifPjwoJY_1fBgDdwZIObNxuwY9Ft9w%3A1766740853191&ei=dVNOadGwC86YseMP_YWHmQE&oq=klinik+pergigian+azam+sp++reviews&gs_lp=Egxnd3Mtd2l6LXNlcnAiIWtsaW5payBwZXJnaWdpYW4gYXphbSBzcCAgcmV2aWV3cyoCCAAyCBAAGIAEGKIEMggQABiABBiiBEiCFFC7BVjxCXABeACQAQCYAWugAcMCqgEDMy4xuAEByAEA-AEBmAIFoALdAsICCRAAGLADGAgYHsICCxAAGIAEGLADGKIEwgIEECMYJ8ICBhAAGAcYHsICCBAAGAcYCBgemAMAiAYBkAYHkgcDMy4yoAfUELIHAzIuMrgH2QLCBwUwLjEuNMgHEoAIAA&sclient=gws-wiz-serp#lrd=0x304b2babfbeeb669:0x6e5896c0d74e7871,3,,," target="_blank" class="btn-google-review">
+                                <i class="fa-brands fa-google"></i> Google Review
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-img">
+                        <img src="https://raw.githubusercontent.com/ddnetwork-ent/clinic-azam-dental/main/Clinic.webp" alt="Klinik Pergigian Azam Interior">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: ABOUT ==================== -->
+        <section id="about" class="page">
+            <div class="container">
+                <div class="about-hero">
+                    <h1 data-i18n="about-title">Tentang Klinik</h1>
+                    <p style="color: var(--text-light); font-size: 1.1rem;" data-i18n="about-subtitle">Dedikasi untuk kesihatan mulut di Sungai Petani.</p>
+                </div>
+
+                <div class="about-content">
+                    <div class="about-img">
+                        <img src="https://raw.githubusercontent.com/ddnetwork-ent/clinic-azam-dental/main/IMG_2260.JPG" alt="Clinic Interior">
+                    </div>
+                    <div class="about-text">
+                        <h2 data-i18n="about-who">Siapa Kami</h2>
+                        <p style="color: var(--text-light); font-size: 1.05rem; margin-bottom: 25px;" data-i18n="about-story">
+                            Terletak di <strong>Pusat Komersial Saujana</strong>, kami menawarkan kemudahan canggih. Kunjungan ke doktor gigi tidak perlu menakutkan.
+                        </p>
+                        <ul class="check-list">
+                            <li><i class="fa-solid fa-check"></i> <span data-i18n="about-point-1">X-Ray Digital Terkini</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span data-i18n="about-point-2">Kawalan Menunggu Selesa</span></li>
+                            <li><i class="fa-solid fa-check"></i> <span data-i18n="about-point-3">Tempat Parking Luas</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: SERVICES ==================== -->
+        <section id="services" class="page">
+            <div class="services-hero">
+                <div class="container">
+                    <h1 data-i18n="services-title">Perkhidmatan Kami</h1>
+                    <p style="font-size: 1.1rem; color: var(--text-light);" data-i18n="services-subtitle">Penjagaan profesional mengikut keperluan.</p>
+                </div>
+            </div>
+            <div class="container">
+                <div class="service-grid-container">
+                    <div class="service-card">
+                        <div class="s-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <h3 data-i18n="srv-1">Pemutihan Gigi</h3>
+                        <p style="color: var(--text-light);" data-i18n="srv-1-desc">Senyuman lebih cerah dengan rawatan profesional.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-icon"><i class="fa-solid fa-tooth"></i></div>
+                        <h3 data-i18n="srv-2">Scaling & Pemolesan</h3>
+                        <p style="color: var(--text-light);" data-i18n="srv-2-desc">Pembersihan dalam untuk gusi yang sihat.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-icon"><i class="fa-solid fa-teeth-open"></i></div>
+                        <h3 data-i18n="srv-3">Gigi & Pendakap</h3>
+                        <p style="color: var(--text-light);" data-i18n="srv-3-desc">Luruskan gigi untuk rupa yang sempurna.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-icon"><i class="fa-solid fa-notes-medical"></i></div>
+                        <h3 data-i18n="srv-4">Rawatan Salur Akar</h3>
+                        <p style="color: var(--text-light);" data-i18n="srv-4-desc">Terapi pakar untuk menyelamatkan gigi rosak.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-icon"><i class="fa-solid fa-child-reaching"></i></div>
+                        <h3 data-i18n="srv-5">Pergigian Kanak-kanak</h3>
+                        <p style="color: var(--text-light);" data-i18n="srv-5-desc">Penjagaan lembut khusus untuk kanak-kanak.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="s-icon"><i class="fa-solid fa-x-ray"></i></div>
+                        <h3 data-i18n="srv-6">X-Ray Digital</h3>
+                        <p style="color: var(--text-light);" data-i18n="srv-6-desc">Imej radiasi rendah untuk diagnosis.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: BOOK ==================== -->
+        <section id="book" class="page">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: var(--primary);" data-i18n="form-title-lg">Buat Temujanji</h1>
+                    <p style="color: var(--text-light); margin-top: 10px;" data-i18n="form-sub-lg">Isi borang di bawah atau cari lokasi kami di peta.</p>
+                </div>
+
+                <div class="book-grid">
+                    
+                    <!-- FORM SECTION -->
+                    <div class="form-section">
+                        <h3><i class="fa-regular fa-calendar-check" style="color: var(--accent);"></i> <span data-i18n="form-title">Permintaan Temujanji</span></h3>
+                        
+                        <form id="appointmentForm" action="https://formsubmit.co/danialamir1809@gmail.com" method="POST">
+                            <input type="hidden" name="_subject" value="Permintaan Temujanji Baru - Klinik Azam">
+                            <input type="hidden" name="_captcha" value="false">
+                            
+                            <div class="input-group">
+                                <label data-i18n="lbl-name">Nama Anda</label>
+                                <input type="text" name="Customer Name" placeholder="Nama Penuh" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label data-i18n="lbl-phone">Nombor Telefon</label>
+                                <input type="tel" name="Phone Number" placeholder="01x-xxxxxxx" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            </div>
+
+                            <div class="date-time-group">
+                                <div class="input-group">
+                                    <label data-i18n="lbl-date">Pilih Tarikh</label>
+                                    <input type="date" name="Appointment Date" id="dateInput" required>
+                                </div>
+                                <div class="input-group">
+                                    <label data-i18n="lbl-time">Pilih Masa</label>
+                                    <input type="time" name="Appointment Time" id="timeInput" required>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-clock" style="color: var(--primary);"></i>
+                                <small style="color: var(--primary-dark); font-weight: 500;" data-i18n="hours-hint">Isnin-Sabtu: 9pagi - 6ptg (Tutup Ahad)</small>
+                            </div>
+
+                            <div class="input-group">
+                                <label data-i18n="lbl-service">Perkhidmatan</label>
+                                <select name="Selected Service">
+                                    <option value="General Checkup" data-i18n="opt-checkup">Pemeriksaan Umum</option>
+                                    <option value="Scaling" data-i18n="opt-scaling">Scaling</option>
+                                    <option value="Pain / Emergency" data-i18n="opt-pain">Sakit / Kecemasan</option>
+                                    <option value="Braces Consultation" data-i18n="opt-braces">Konsultasi Pendakap</option>
+                                    <option value="Other" data-i18n="opt-other">Lain-lain</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label data-i18n="lbl-msg">Mesej (Pilihan)</label>
+                                <textarea name="Additional Message" rows="3" placeholder="Ada masalah khusus?"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-modern" style="width: 100%; justify-content: center;" data-i18n="btn-submit">Hantar Permintaan</button>
+                        </form>
+                    </div>
+
+                    <!-- MAP SECTION -->
+                    <div class="map-section">
+                        <div class="map-header">
+                            <h3 data-i18n="map-title">Cari Kami</h3>
+                            <p>21, Jalan PKS (A), Pusat Komersial Saujana, 08000 Sungai Petani</p>
+                        </div>
+                        
+                        <iframe 
+                            class="map-frame"
+                            frameborder="0" 
+                            style="border:0" 
+                            src="https://maps.google.com/maps?q=21,+Jalan+PKS+(A),+Pusat+Komersial+Saujana,+08000+Sungai+Petani,+Kedah&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                            allowfullscreen>
+                        </iframe>
+
+                        <div class="map-actions">
+                            <p style="margin-bottom: 15px; font-weight: 600; color: var(--text-dark);" data-i18n="get-dir">Dapatkan Arah:</p>
+                            <div class="btn-map-group">
+                                <a href="https://www.google.com/maps/dir/?api=1&destination=Klinik+Pergigian+Azam+Sungai+Petani" target="_blank" class="btn-map btn-google">
+                                    <i class="fa-brands fa-google"></i> Google Maps
+                                </a>
+                                <a href="https://waze.com/ul?q=Klinik+Pergigian+Azam,+Sungai+Petani" target="_blank" class="btn-map btn-waze">
+                                    <i class="fa-solid fa-location-arrow"></i> Waze
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: THANK YOU ==================== -->
+        <section id="thank-you" class="page">
+            <div class="container">
+                <div class="thank-you-section">
+                    <div class="ty-icon"><i class="fa-solid fa-check"></i></div>
+                    <h1 class="ty-title" data-i18n="ty-title">Terima Kasih!</h1>
+                    <p class="ty-msg" data-i18n="ty-msg">Terima kasih kerana memilih kami. Pengesahan temujanji anda akan dihubungi sebentar lagi.</p>
+                    <button class="btn-modern" onclick="switchPage('home')">
+                        <i class="fa-solid fa-house"></i> <span data-i18n="btn-home">Kembali ke Laman Utama</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <div class="footer-logo">Klinik Pergigian Azam (SP Saujana)</div>
+                <p style="font-size: 0.9rem; margin-top: 5px; opacity: 0.8;">Sungai Petani, Kedah</p>
+            </div>
+            <div>
+                <p style="font-size: 0.9rem;">&copy; 2026 DDNetwork One Company. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- IMPROVED TOAST NOTIFICATIONS CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- Floating WhatsApp (Now on Right) -->
+    <a href="https://wa.me/60174802238" class="float-wa" target="_blank" title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Language Data
+        const translations = {
+            en: {
+                "current-lang": "BM",
+                "nav-home": "Home",
+                "nav-about": "About",
+                "nav-services": "Services",
+                "btn-book": "Book Now", 
+                "hero-title": "Your Brightest Smile Starts Here",
+                "hero-desc": "Experience premium dental care in Sungai Petani. We combine expert treatment with a gentle touch to ensure your comfort.",
+                "btn-book-main": "Book Appointment",
+                "about-title": "About Our Clinic",
+                "about-subtitle": "Dedicated to oral health in Sungai Petani.",
+                "about-who": "Who We Are",
+                "about-story": "Located at <strong>Pusat Komersial Saujana</strong>, we offer state-of-the-art facilities. We believe visiting dentist shouldn't be scary. Our friendly team makes every visit pleasant.",
+                "about-point-1": "Latest Digital X-Ray",
+                "about-point-2": "Comfortable Waiting Area",
+                "about-point-3": "Ample Parking",
+                "services-title": "Our Services",
+                "services-subtitle": "Professional care tailored to your needs.",
+                "srv-1": "Teeth Whitening",
+                "srv-1-desc": "Brighter smile with professional treatment.",
+                "srv-2": "Scaling & Polishing",
+                "srv-2-desc": "Deep cleaning for healthy gums.",
+                "srv-3": "Braces & Aligners",
+                "srv-3-desc": "Straighten teeth for a perfect look.",
+                "srv-4": "Root Canal",
+                "srv-4-desc": "Expert therapy to save damaged teeth.",
+                "srv-5": "Kids Dentistry",
+                "srv-5-desc": "Gentle care designed for children.",
+                "srv-6": "Digital X-Ray",
+                "srv-6-desc": "Low-radiation imaging for diagnosis.",
+                "map-title": "Find Us",
+                "get-dir": "Get Directions:",
+                "form-title-lg": "Book Your Appointment",
+                "form-sub-lg": "Fill out the form below or find us on the map.",
+                "form-title": "Appointment Request",
+                "lbl-name": "Your Name",
+                "lbl-phone": "Phone Number",
+                "lbl-date": "Select Date",
+                "lbl-time": "Select Time",
+                "hours-hint": "Mon-Sat: 9am - 6pm (Closed Sunday)",
+                "lbl-service": "Service",
+                "opt-checkup": "General Checkup",
+                "opt-scaling": "Scaling",
+                "opt-pain": "Pain / Emergency",
+                "opt-braces": "Braces Consultation",
+                "opt-other": "Other",
+                "lbl-msg": "Message (Optional)",
+                "btn-submit": "Send Request",
+                "ty-title": "Thank You!",
+                "ty-msg": "Thank you for choosing us. Your appointment confirmation will be reconfirmed shortly.",
+                "btn-home": "Back to Home",
+                "error-sun": "We are closed on Sundays. Rescheduled to Monday.",
+                "error-early": "We open at 9 AM. Time adjusted.",
+                "error-late": "We close at 6 PM. Rescheduled to tomorrow 9 AM."
+            },
+            bm: {
+                "current-lang": "EN",
+                "nav-home": "Utama",
+                "nav-about": "Tentang",
+                "nav-services": "Perkhidmatan",
+                "btn-book": "Temujanji",
+                "hero-title": "Seri Senyuman Bermula Di Sini", 
+                "hero-desc": "Nikmati perawatan pergigian premium di Sungai Petani. Kami menggabungkan rawatan pakar dengan sentuhan lembut.",
+                "btn-book-main": "Buat Temujanji",
+                "about-title": "Tentang Klinik",
+                "about-subtitle": "Dedikasi untuk kesihatan mulut di Sungai Petani.",
+                "about-who": "Siapa Kami",
+                "about-story": "Terletak di <strong>Pusat Komersial Saujana</strong>, kami menawarkan kemudahan canggih. Kunjungan ke doktor gigi tidak perlu menakutkan.",
+                "about-point-1": "X-Ray Digital Terkini",
+                "about-point-2": "Kawalan Menunggu Selesa",
+                "about-point-3": "Tempat Parking Luas",
+                "services-title": "Perkhidmatan Kami",
+                "services-subtitle": "Penjagaan profesional mengikut keperluan.",
+                "srv-1": "Pemutihan Gigi",
+                "srv-1-desc": "Senyuman lebih cerah dengan rawatan profesional.",
+                "srv-2": "Scaling & Pemolesan",
+                "srv-2-desc": "Pembersihan dalam untuk gusi yang sihat.",
+                "srv-3": "Gigi & Pendakap",
+                "srv-3-desc": "Luruskan gigi untuk rupa yang sempurna.",
+                "srv-4": "Rawatan Salur Akar",
+                "srv-4-desc": "Terapi pakar untuk menyelamatkan gigi rosak.",
+                "srv-5": "Pergigian Kanak-kanak",
+                "srv-5-desc": "Penjagaan lembut khusus untuk kanak-kanak.",
+                "srv-6": "X-Ray Digital",
+                "srv-6-desc": "Imej radiasi rendah untuk diagnosis.",
+                "map-title": "Cari Kami",
+                "get-dir": "Dapatkan Arah:",
+                "form-title-lg": "Buat Temujanji",
+                "form-sub-lg": "Isi borang di bawah atau cari lokasi kami di peta.",
+                "form-title": "Permintaan Temujanji",
+                "lbl-name": "Nama Anda",
+                "lbl-phone": "Nombor Telefon",
+                "lbl-date": "Pilih Tarikh",
+                "lbl-time": "Pilih Masa",
+                "hours-hint": "Isnin-Sabtu: 9pagi - 6ptg (Tutup Ahad)",
+                "lbl-service": "Perkhidmatan",
+                "opt-checkup": "Pemeriksaan Umum",
+                "opt-scaling": "Scaling",
+                "opt-pain": "Sakit / Kecemasan",
+                "opt-braces": "Konsultasi Pendakap",
+                "opt-other": "Lain-lain",
+                "lbl-msg": "Mesej (Pilihan)",
+                "btn-submit": "Hantar Permintaan",
+                "ty-title": "Terima Kasih!",
+                "ty-msg": "Terima kasih kerana memilih kami. Pengesahan temujanji anda akan dihubungi sebentar lagi.",
+                "btn-home": "Kembali ke Laman Utama",
+                "error-sun": "Kami tutup pada hari Ahad. Tarikh dipindahkan ke Isnin.",
+                "error-early": "Kami buka pada pukul 9 pagi. Masa disesuaikan.",
+                "error-late": "Kami tutup pada pukul 6 ptg. Tarikh dipindahkan ke esok."
+            }
+        };
+
+        // 2. Initialization
+        let currentLang = 'bm'; // CHANGED DEFAULT TO BM
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateContent(); // Run immediately to fix "Flash of Content" bug
+        });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'bm' : 'en';
+            updateContent();
+        }
+
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+            document.getElementById('current-lang').innerText = translations[currentLang]['current-lang'];
+        }
+
+        // 3. Header Shrink Effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('shrink');
+            } else {
+                header.classList.remove('shrink');
+            }
+        });
+
+        // 4. Page Switching
+        function switchPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('onclick').includes(pageId)) link.classList.add('active');
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const navMenu = document.getElementById('navMenu');
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                document.getElementById('mobileToggle').querySelector('i').classList.remove('fa-xmark');
+                document.getElementById('mobileToggle').querySelector('i').classList.add('fa-bars');
+            }
+        }
+
+        // 5. Mobile Menu
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = mobileToggle.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 6. IMPROVED TOAST NOTIFICATION SYSTEM
+        const toastContainer = document.getElementById('toast-container');
+
+        function showToast(type, title, message, duration = 4000) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`; 
+
+            let iconClass = 'fa-circle-info';
+            if (type === 'warning') iconClass = 'fa-triangle-exclamation';
+            if (type === 'success') iconClass = 'fa-circle-check';
+            if (type === 'error') iconClass = 'fa-circle-xmark';
+
+            toast.innerHTML = `
+                <div class="toast-icon-box">
+                    <i class="fa-solid ${iconClass}"></i>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if(toast.parentElement) toast.remove();
+                }, 400);
+            }, duration);
+        }
+
+        function showToastWarning(msg) {
+            showToast('warning', currentLang === 'en' ? 'Notice' : 'Notis', msg);
+        }
+
+        // 7. Smart Business Hours Logic (Date Fixed)
+        const dateInput = document.getElementById('dateInput');
+        const timeInput = document.getElementById('timeInput');
+
+        function getMinDate() {
+            // Fixed to use local time components to avoid timezone issues
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        dateInput.min = getMinDate();
+        timeInput.min = "09:00";
+        timeInput.max = "18:00";
+        
+        let now = new Date();
+        let dayOfWeek = now.getDay();
+        let hour = now.getHours();
+
+        if (dayOfWeek === 0 || hour >= 18 || hour < 9) {
+             if(dayOfWeek === 0) now.setDate(now.getDate() + 1); 
+             else if (dayOfWeek === 6) now.setDate(now.getDate() + 2); 
+             else now.setDate(now.getDate() + 1); 
+             now.setHours(9,0,0);
+        }
+        
+        dateInput.valueAsDate = now;
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeInput.value = `${hours}:${minutes}`;
+
+        // Date Validation
+        dateInput.addEventListener('input', function(e) {
+            const selectedDate = new Date(this.value);
+            const nowDate = new Date();
+            
+            // Fix: Use setHours(0,0,0,0) for accurate date comparison
+            if (selectedDate < nowDate.setHours(0,0,0,0)) {
+                this.value = getMinDate(); 
+                timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-early']); 
+                return;
+            }
+            timeInput.value = "09:00";
+        });
+
+        // Time Validation
+        timeInput.addEventListener('input', function(e) {
+            const dateVal = dateInput.valueAsDate || new Date();
+            const timeVal = this.value; 
+            
+            if(!dateInput.value) return;
+
+            const combined = new Date(`${dateVal.toISOString().split('T')[0]}T${timeVal}`);
+
+            if (combined.getDay() === 0) {
+                dateVal.setDate(dateVal.getDate() + 1);
+                dateInput.valueAsDate = dateVal;
+                timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-sun']);
+                return;
+            }
+
+            if (timeVal < "09:00") {
+                timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-early']);
+                return;
+            }
+
+            if (timeVal > "18:00") {
+                if (dateVal.getDay() === 6) {
+                     dateVal.setDate(dateVal.getDate() + 2);
+                } else {
+                     dateVal.setDate(dateVal.getDate() + 1);
+                }
+                dateInput.valueAsDate = dateVal;
+                timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-late']);
+                return;
+            }
+        });
+
+        // 8. Form Handling
+        const form = document.getElementById('appointmentForm');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const btn = form.querySelector('button');
+            const originalContent = btn.innerHTML;
+            
+            // Loading State
+            btn.innerHTML = '<div class="spinner"></div>';
+            btn.style.opacity = '0.8';
+            btn.disabled = true;
+
+            fetch(form.action, {
+                method: form.method,
+                body: new FormData(form)
+            })
+            .then(response => {
+                showToast('success', currentLang === 'en' ? 'Success' : 'Berjaya', currentLang === 'en' ? 'Request sent successfully!' : 'Permintaan berjaya dihantar!');
+                
+                setTimeout(() => {
+                    switchPage('thank-you');
+                    btn.innerHTML = originalContent;
+                    btn.style.opacity = '1';
+                    btn.disabled = false;
+                    form.reset();
+                    
+                    let newDate = new Date();
+                    if(newDate.getDay() === 0 || newDate.getHours() >= 18) newDate.setDate(newDate.getDate() + 1);
+                    dateInput.valueAsDate = newDate;
+                    timeInput.value = "09:00";
+                }, 1500); 
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('error', currentLang === 'en' ? 'Error' : 'Ralat', currentLang === 'en' ? "Submission failed. Try again." : "Gagal menghantar. Cuba lagi.");
+                btn.innerHTML = originalContent;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
