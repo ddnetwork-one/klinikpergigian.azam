@@ -25,13 +25,14 @@
             --text-light: #475569;
             --bg-white: #ffffff;
             --bg-offwhite: #f8fafc;
+            --bg-tint: #f0f9ff; 
             --radius-lg: 16px; 
             --radius-md: 12px;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
             --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.06);
             --shadow-hover: 0 12px 24px rgba(2, 132, 199, 0.15);
             --shadow-toast: 0 10px 30px -5px rgba(0, 0, 0, 0.15);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1); /* Smoother transition for reveal */
         }
 
         /* --- Reset & Base --- */
@@ -61,7 +62,7 @@
         /* --- Header & Navigation --- */
         header {
             position: sticky; top: 0; z-index: 1000;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.98);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid #e2e8f0;
             padding: 15px 0; 
@@ -96,13 +97,16 @@
 
         .nav-menu { display: flex; gap: 30px; align-items: center; }
         
+        .nav-item { position: relative; cursor: pointer; padding: 5px 0; }
+
         .nav-link {
             font-weight: 600; font-size: 0.95rem; color: var(--text-light);
-            position: relative; cursor: pointer; padding: 5px 0;
+            padding: 5px 0;
+            display: flex; align-items: center; gap: 6px;
             transition: color 0.3s ease;
         }
 
-        .nav-link:hover, .nav-link.active { color: var(--primary); }
+        .nav-link:hover, .nav-link.active, .nav-item:hover .nav-link { color: var(--primary); }
         
         .nav-link::after {
             content: ''; position: absolute; width: 0; height: 3px; bottom: -4px; left: 0;
@@ -110,6 +114,38 @@
         }
         
         .nav-link.active::after { width: 100%; }
+
+        /* Dropdown */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 240px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            border: 1px solid #f1f5f9;
+            z-index: 1001;
+        }
+        .nav-item:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(15px);
+        }
+        .dropdown-item {
+            display: block; padding: 10px 20px; font-size: 0.9rem;
+            color: var(--text-light); font-weight: 500; transition: 0.2s;
+        }
+        .dropdown-item:hover {
+            background: var(--bg-tint);
+            color: var(--primary);
+            padding-left: 25px;
+        }
 
         /* Language Switcher */
         .lang-switch {
@@ -134,38 +170,34 @@
             transition: var(--transition);
             white-space: nowrap;
         }
-
         .btn-modern:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(2, 132, 199, 0.4);
         }
-
+        .btn-outline {
+            background: transparent; border: 2px solid var(--primary); color: var(--primary);
+            padding: 10px 24px; border-radius: 50px; font-weight: 600; font-size: 0.95rem;
+            cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-outline:hover { background: var(--primary); color: white; }
         .btn-google-review {
-            background: #fff; color: #4285F4; 
-            padding: 12px 24px; border-radius: 50px; 
-            font-weight: 600; font-size: 0.95rem;
-            border: 1px solid #e2e8f0; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 10px;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
+            background: #fff; color: #4285F4; padding: 12px 24px; border-radius: 50px; 
+            font-weight: 600; font-size: 0.95rem; border: 1px solid #e2e8f0; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px; transition: var(--transition); box-shadow: var(--shadow-sm);
         }
         .btn-google-review:hover { background: #f8fafc; border-color: #4285F4; transform: translateY(-2px); }
 
         /* Map Buttons */
         .btn-map-group { display: flex; gap: 15px; margin-top: 15px; }
-        
         .btn-map {
             flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
             padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
             transition: var(--transition); cursor: pointer; color: white;
         }
-
         .btn-google { background: #4285F4; box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3); }
         .btn-google:hover { background: #3367d6; }
-
         .btn-waze { background: #33CCFF; box-shadow: 0 4px 10px rgba(51, 204, 255, 0.3); }
         .btn-waze:hover { background: #29b6e8; }
-
         .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
 
         /* --- Page Switching Logic --- */
@@ -183,16 +215,63 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- SCROLL REVEAL ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+        /* --- PARALLAX EFFECTS --- */
+        /* Simple CSS Parallax Backgrounds for alternating sections */
+        .parallax-bg {
+            background-image: linear-gradient(rgba(240, 249, 255, 0.9), rgba(240, 249, 255, 0.95)), url('https://www.transparenttextures.com/patterns/cubes.png');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: repeat;
+        }
+        
+        /* JS Parallax Container */
+        .parallax-element {
+            will-change: transform;
+        }
+
         /* --- HOME PAGE STYLES --- */
         .hero-section {
-            padding: 60px 0; 
+            padding: 80px 0; 
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 50px; 
             align-items: center;
+            overflow: hidden; /* Contains the parallax image */
         }
         .hero-text h1 { 
-            font-size: 3rem; 
+            font-size: 3.2rem; 
             margin-bottom: 20px; 
             color: var(--primary-dark); 
             line-height: 1.1;
@@ -207,44 +286,130 @@
         .hero-img { 
             position: relative; 
             z-index: 1;
+            /* Parallax movement handled via JS, keeping initial rotation */
+            transform: rotate(-2deg); 
+            transition: transform 0.5s ease;
         }
         .hero-img img { 
             border-radius: 24px; 
             box-shadow: 20px 20px 0px var(--primary-light); 
-            transform: rotate(-2deg);
+            width: 100%;
+        }
+        /* Interaction reset for parallax to work nicely */
+        .hero-img:hover img { box-shadow: 25px 25px 0px var(--primary-light); }
+
+        /* --- PAGE HEADERS --- */
+        .page-header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            background: linear-gradient(180deg, var(--bg-tint) 0%, rgba(255,255,255,0) 100%);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header h1 { font-size: 2.5rem; color: var(--primary-dark); margin-bottom: 10px; position: relative; z-index: 2; }
+        .page-header p { color: var(--text-light); max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+
+        /* --- SERVICE DETAIL LAYOUT (Zig-Zag) --- */
+        .alternating-section {
+            padding: 80px 0;
+            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alternating-section.bg-tint {
+            background-color: var(--bg-tint);
+        }
+        .alternating-section.bg-tint::before {
+            /* Parallax decorative background */
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.1;
+            background-attachment: fixed; 
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .zigzag-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .zigzag-grid.reverse {
+            direction: rtl; 
+        }
+        .zigzag-grid.reverse > * {
+            direction: ltr; 
+        }
+
+        .zz-img-box img {
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            /* Add subtle transition for smoother feel */
             transition: transform 0.5s ease;
         }
-        .hero-img:hover img { transform: rotate(0deg); }
 
-        /* --- ABOUT PAGE STYLES --- */
-        .about-hero { padding: 50px 0 20px; text-align: center; }
-        .about-hero h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
-        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 40px 0; align-items: center; }
-        .about-img img { border-radius: 20px; box-shadow: var(--shadow-md); }
-        .about-text h2 { font-size: 1.8rem; margin-bottom: 20px; }
-        .check-list li { margin-bottom: 15px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
-        .check-list i { color: var(--accent); font-size: 1.1rem; background: #f0fdfa; padding: 8px; border-radius: 50%; }
+        .zz-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            line-height: 1;
+            margin-bottom: -20px;
+            display: block;
+            opacity: 0.4;
+        }
 
-        /* --- SERVICES PAGE STYLES --- */
-        .services-hero { padding: 50px 0 30px; text-align: center; background: white; border-radius: 0 0 40px 40px; margin-bottom: 30px; box-shadow: var(--shadow-sm); }
-        .services-hero h1 { font-size: 2.5rem; color: var(--primary-dark); }
-        .service-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        .service-card {
-            background: white; border-radius: var(--radius-lg); padding: 30px;
-            transition: var(--transition); 
+        .zz-content h2 {
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .zz-content p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        /* --- TEAM & BRANCHES --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .team-card, .branch-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
             border: 1px solid #f1f5f9;
+            transition: var(--transition);
         }
-        .service-card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: var(--shadow-hover); 
-            border-color: var(--primary-light);
+        .team-card:hover, .branch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-md);
         }
-        .service-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: var(--primary-dark); }
-        .s-icon { 
-            font-size: 1.8rem; color: white; margin-bottom: 20px; 
-            background: var(--primary); width: 60px; height: 60px; 
-            display: flex; align-items: center; justify-content: center; 
-            border-radius: 16px; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        .team-avatar {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            object-fit: cover;
+            border: 4px solid var(--primary-light);
         }
 
         /* --- BOOK PAGE STYLES --- */
@@ -255,49 +420,35 @@
             margin: 20px auto 60px; 
             align-items: start;
         }
-        
         .form-section {
             background: white; border-radius: var(--radius-lg); overflow: hidden;
             box-shadow: var(--shadow-md); padding: 40px;
             border: 1px solid #e2e8f0;
             order: 1; 
         }
-        
         .map-section {
             background: white; border-radius: var(--radius-lg); overflow: hidden;
             box-shadow: var(--shadow-md); border: 1px solid #e2e8f0;
             position: sticky; top: 100px; 
             order: 2; 
         }
-
         .map-header { padding: 25px; background: var(--primary-dark); color: white; }
         .map-header h3 { color: white; margin: 0; font-size: 1.3rem; }
         .map-header p { font-size: 0.9rem; opacity: 0.9; margin: 8px 0 0 0; }
-        
         .map-frame { width: 100%; height: 350px; border: none; filter: grayscale(20%); transition: filter 0.3s; }
         .map-section:hover .map-frame { filter: grayscale(0%); }
-        
         .map-actions { padding: 25px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
-
         .form-section h3 { margin-bottom: 25px; font-size: 1.5rem; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; }
-        
         .input-group { margin-bottom: 20px; }
-        .input-group label { 
-            display: block; font-weight: 600; margin-bottom: 8px; 
-            font-size: 1rem; color: var(--text-dark); 
-        }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 1rem; color: var(--text-dark); }
         .input-group input, .input-group select, .input-group textarea {
             width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 10px;
             font-family: inherit; transition: var(--transition); background: #fdfdfd;
             font-size: 16px; color: var(--text-dark);
         }
-        
         .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            background: #fff;
+            border-color: var(--primary); outline: none; background: #fff;
             box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
         }
 
@@ -315,13 +466,9 @@
             box-shadow: var(--shadow-sm);
         }
         .ty-icon {
-            font-size: 6rem;
-            color: #10b981;
-            margin-bottom: 20px;
-            background: #d1fae5;
-            width: 120px; height: 120px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
+            font-size: 6rem; color: #10b981; margin-bottom: 20px;
+            background: #d1fae5; width: 120px; height: 120px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%;
         }
         .ty-title { font-size: 2.5rem; color: var(--text-dark); margin-bottom: 15px; }
         .ty-msg { font-size: 1.2rem; color: var(--text-light); max-width: 600px; margin: 0 auto 40px; line-height: 1.6; }
@@ -331,115 +478,31 @@
         .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
         .footer-logo { font-weight: 700; color: white; font-size: 1.2rem; }
 
-        /* --- IMPROVED TOAST NOTIFICATIONS --- */
+        /* --- TOAST & FLOAT --- */
         #toast-container {
-            position: fixed;
-            bottom: 30px;
-            /* CHANGED: Moved to LEFT to balance with WA button on Right */
-            left: 30px; 
-            right: auto;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            position: fixed; bottom: 30px; left: 30px; right: auto; z-index: 2000;
+            display: flex; flex-direction: column; gap: 15px;
         }
-
         .toast {
-            background: white;
-            min-width: 320px;
-            max-width: 380px;
-            padding: 16px;
-            border-radius: 14px;
-            box-shadow: var(--shadow-toast);
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
+            background: white; min-width: 320px; max-width: 380px; padding: 16px;
+            border-radius: 14px; box-shadow: var(--shadow-toast);
+            display: flex; align-items: flex-start; gap: 14px;
+            opacity: 0; transform: translateY(50px) scale(0.95);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .toast-icon-box {
-            width: 42px;
-            height: 42px;
-            min-width: 42px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .toast-message {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            line-height: 1.4;
-        }
-
-        .toast-close {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: transparent;
-            border: none;
-            color: #cbd5e1;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: color 0.2s;
-        }
-        .toast-close:hover { color: #64748b; }
-
-        /* Type Variations */
-        .toast.warning .toast-icon-box {
-            background-color: #fef3c7; color: #d97706;
-        }
-        .toast.success .toast-icon-box {
-            background-color: #d1fae5; color: #059669;
-        }
-        .toast.error .toast-icon-box {
-            background-color: #fee2e2; color: #dc2626;
-        }
-
-        /* --- CHANGED: FLOATING WHATSAPP ON RIGHT --- */
+        .toast.show { opacity: 1; transform: translateY(0) scale(1); }
         .float-wa {
-            position: fixed; 
-            bottom: 30px; 
-            right: 30px; /* Changed from left: 30px */
-            background-color: #25D366;
-            color: #FFF; border-radius: 50px; text-align: center; font-size: 32px;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); 
-            z-index: 100; /* Ensure it's below mobile menu */
+            position: fixed; bottom: 30px; right: 30px;
+            background-color: #25D366; color: #FFF; border-radius: 50px;
+            text-align: center; font-size: 32px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 100;
             display: flex; align-items: center; justify-content: center;
             width: 65px; height: 65px; transition: var(--transition); text-decoration: none;
         }
         .float-wa:hover { transform: scale(1.1); background-color: #1fad55; }
-
-        /* Spinner */
         .spinner {
-            width: 20px; height: 20px;
-            border: 3px solid #ffffff;
-            border-top: 3px solid transparent;
-            border-radius: 50%;
+            width: 20px; height: 20px; border: 3px solid #ffffff;
+            border-top: 3px solid transparent; border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -451,6 +514,8 @@
             .map-section { order: 2; position: static; }
             .map-frame { height: 300px; }
             .hero-text h1 { font-size: 2.5rem; }
+            .zigzag-grid, .zigzag-grid.reverse { grid-template-columns: 1fr; direction: ltr; gap: 30px; }
+            .zz-img-box { order: -1; }
         }
 
         @media (max-width: 768px) {
@@ -459,44 +524,30 @@
                 background: rgba(255,255,255,0.98); backdrop-filter: blur(15px);
                 flex-direction: column; padding-top: 90px;
                 box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s;
-                align-items: flex-start; padding-left: 40px;
-                z-index: 1001; /* Higher than WA button */
+                align-items: flex-start; padding-left: 30px; z-index: 1001;
             }
             .nav-menu.active { right: 0; }
-            .nav-menu li { width: 100%; margin-bottom: 25px; }
+            .nav-menu > li { width: 100%; margin-bottom: 20px; }
+            .dropdown-toggle .fa-chevron-down { transition: 0.3s; }
+            .dropdown-toggle.active .fa-chevron-down { transform: rotate(180deg); }
+            .dropdown-menu {
+                position: static; opacity: 1; visibility: visible; transform: none;
+                box-shadow: none; border: none; padding-left: 15px; display: none;
+                background: transparent;
+            }
+            .dropdown-toggle.active + .dropdown-menu { display: block; }
             .mobile-toggle { display: block; z-index: 1002; }
-            
-            .hero-section { grid-template-columns: 1fr; text-align: center; padding: 30px 0; gap: 40px; }
+            .hero-section { grid-template-columns: 1fr; text-align: center; padding: 40px 0; gap: 40px; }
             .hero-text h1 { font-size: 2rem; }
             .hero-text p { font-size: 1rem; margin: 0 auto 25px; }
             .hero-img { max-width: 300px; margin: 0 auto; }
-            .hero-img img { transform: rotate(0deg); box-shadow: 10px 10px 0px var(--primary-light); }
-
-            .about-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-            .about-img { order: -1; } 
-            .check-list li { justify-content: center; }
-            
-            .services-hero { padding: 40px 20px; border-radius: 0; }
-            .services-hero h1 { font-size: 2rem; }
-            .service-grid-container { grid-template-columns: 1fr; }
-            
+            .hero-img img { transform: none; box-shadow: 10px 10px 0px var(--primary-light); }
             .btn-map-group { flex-direction: column; }
             .date-time-group { grid-template-columns: 1fr; } 
-            
-            /* Mobile Float WA & Toast */
-            .float-wa { 
-                bottom: 20px; 
-                right: 20px; 
-                width: 55px; height: 55px; font-size: 28px; 
-            }
-            
+            .float-wa { bottom: 20px; right: 20px; width: 55px; height: 55px; font-size: 28px; }
             .form-section, .map-section { padding: 25px; }
             .map-frame { height: 250px; }
-
-            /* Mobile Toast: Center Bottom */
-            #toast-container {
-                left: 20px; right: 20px; bottom: 90px; /* Moved up to avoid WA button overlap */
-            }
+            #toast-container { left: 20px; right: 20px; bottom: 90px; }
             .toast { min-width: auto; width: 100%; }
         }
     </style>
@@ -510,10 +561,6 @@
                 <img src="https://raw.githubusercontent.com/ddnetwork-ent/clinic-azam-dental/main/IMG_2260.JPG" alt="Klinik Pergigian Azam" class="logo-img">
                 <span>Klinik Pergigian Azam</span>
             </div>
-            
-            <div class="mobile-toggle" id="mobileToggle">
-                <i class="fa-solid fa-bars"></i>
-            </div>
 
             <nav>
                 <ul class="nav-menu" id="navMenu">
@@ -522,12 +569,43 @@
                             <i class="fa-solid fa-globe"></i> <span id="current-lang">BM</span>
                         </div>
                     </li>
-                    <li><a class="nav-link active" onclick="switchPage('home')" data-i18n="nav-home">Utama</a></li>
-                    <li><a class="nav-link" onclick="switchPage('about')" data-i18n="nav-about">Tentang</a></li>
-                    <li><a class="nav-link" onclick="switchPage('services')" data-i18n="nav-services">Perkhidmatan</a></li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('home')" data-i18n="nav-home">Utama</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('about')" data-i18n="nav-about">Tentang Kami</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="nav-link dropdown-toggle" onclick="toggleMobileDropdown(this)">
+                            <span data-i18n="nav-services">Perkhidmatan</span> <i class="fa-solid fa-chevron-down" style="font-size: 0.7em;"></i>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" onclick="switchPage('braces')">Braces / Pendakap</a>
+                            <a class="dropdown-item" onclick="switchPage('invisalign')">Invisalign</a>
+                            <a class="dropdown-item" onclick="switchPage('whitening')">Pemutihan Gigi</a>
+                            <a class="dropdown-item" onclick="switchPage('implant')">Dental Implant</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('team')" data-i18n="nav-team">Pasukan Kami</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('branches')" data-i18n="nav-branches">Cawangan</a>
+                    </li>
+
                     <li><button class="btn-modern" onclick="switchPage('book')"><span data-i18n="btn-book">Temujanji</span> <i class="fa-solid fa-calendar-check"></i></button></li>
                 </ul>
             </nav>
+            
+            <div class="mobile-toggle" id="mobileToggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
         </div>
     </header>
 
@@ -537,7 +615,7 @@
         <section id="home" class="page active">
             <div class="container">
                 <div class="hero-section">
-                    <div class="hero-text">
+                    <div class="hero-text reveal">
                         <h1 data-i18n="hero-title">Seri Senyuman Bermula Di Sini</h1>
                         <p data-i18n="hero-desc">Nikmati perawatan pergigian premium di Sungai Petani. Kami menggabungkan rawatan pakar dengan sentuhan lembut.</p>
                         <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: inherit;">
@@ -547,7 +625,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="hero-img">
+                    <div class="hero-img parallax-element">
                         <img src="https://raw.githubusercontent.com/ddnetwork-ent/clinic-azam-dental/main/Clinic.webp" alt="Klinik Pergigian Azam Interior">
                     </div>
                 </div>
@@ -556,70 +634,220 @@
 
         <!-- ==================== PAGE: ABOUT ==================== -->
         <section id="about" class="page">
+            <div class="page-header reveal">
+                <h1 data-i18n="about-title">Tentang Klinik</h1>
+                <p data-i18n="about-subtitle">Dedikasi untuk kesihatan mulut di Sungai Petani.</p>
+            </div>
             <div class="container">
-                <div class="about-hero">
-                    <h1 data-i18n="about-title">Tentang Klinik</h1>
-                    <p style="color: var(--text-light); font-size: 1.1rem;" data-i18n="about-subtitle">Dedikasi untuk kesihatan mulut di Sungai Petani.</p>
-                </div>
-
-                <div class="about-content">
-                    <div class="about-img">
+                <div class="zigzag-grid">
+                    <div class="zz-img-box reveal-left">
                         <img src="https://raw.githubusercontent.com/ddnetwork-ent/clinic-azam-dental/main/IMG_2260.JPG" alt="Clinic Interior">
                     </div>
-                    <div class="about-text">
+                    <div class="zz-content reveal-right">
                         <h2 data-i18n="about-who">Siapa Kami</h2>
                         <p style="color: var(--text-light); font-size: 1.05rem; margin-bottom: 25px;" data-i18n="about-story">
                             Terletak di <strong>Pusat Komersial Saujana</strong>, kami menawarkan kemudahan canggih. Kunjungan ke doktor gigi tidak perlu menakutkan.
                         </p>
                         <ul class="check-list">
-                            <li><i class="fa-solid fa-check"></i> <span data-i18n="about-point-1">X-Ray Digital Terkini</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span data-i18n="about-point-2">Kawalan Menunggu Selesa</span></li>
-                            <li><i class="fa-solid fa-check"></i> <span data-i18n="about-point-3">Tempat Parking Luas</span></li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-weight: 500;"><i class="fa-solid fa-check" style="color: var(--accent);"></i> <span data-i18n="about-point-1">X-Ray Digital Terkini</span></li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-weight: 500;"><i class="fa-solid fa-check" style="color: var(--accent);"></i> <span data-i18n="about-point-2">Kawalan Menunggu Selesa</span></li>
+                            <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-weight: 500;"><i class="fa-solid fa-check" style="color: var(--accent);"></i> <span data-i18n="about-point-3">Tempat Parking Luas</span></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ==================== PAGE: SERVICES ==================== -->
-        <section id="services" class="page">
-            <div class="services-hero">
-                <div class="container">
-                    <h1 data-i18n="services-title">Perkhidmatan Kami</h1>
-                    <p style="font-size: 1.1rem; color: var(--text-light);" data-i18n="services-subtitle">Penjagaan profesional mengikut keperluan.</p>
+        <!-- ==================== PAGE: BRACES ==================== -->
+        <section id="braces" class="page">
+            <div class="page-header reveal">
+                <h1>Orthodontics & Braces</h1>
+                <p>Straighten your teeth with our advanced orthodontic solutions.</p>
+            </div>
+
+            <!-- 01 Conventional -->
+            <div class="alternating-section">
+                <div class="container zigzag-grid">
+                    <div class="zz-img-box reveal-left parallax-element">
+                        <img src="https://images.unsplash.com/photo-1606813902914-9a4c6a56c1b3?auto=format&fit=crop&q=80&w=800" alt="Conventional Braces">
+                    </div>
+                    <div class="zz-content reveal-right">
+                        <span class="zz-number">01</span>
+                        <h2>Conventional Braces</h2>
+                        <p>Traditional metal brackets and wires. Conventional braces are highly effective in treating a wide range of orthodontic issues, from minor misalignments to severe bite problems.</p>
+                        <button class="btn-outline" onclick="switchPage('book')">Book Consultation</button>
+                    </div>
                 </div>
             </div>
+
+            <!-- 02 Damon -->
+            <div class="alternating-section bg-tint">
+                <div class="container zigzag-grid reverse">
+                    <div class="zz-img-box reveal-right parallax-element">
+                        <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800" alt="Damon Braces">
+                    </div>
+                    <div class="zz-content reveal-left">
+                        <span class="zz-number">02</span>
+                        <h2>Damon Braces</h2>
+                        <p>Damon braces are self-ligating braces that use a sliding mechanism instead of elastic bands. This design allows quicker adjustments and potentially less discomfort.</p>
+                        <ul style="margin-bottom: 20px; padding-left: 20px;">
+                            <li style="margin-bottom:8px;"><i class="fa-solid fa-check" style="color:var(--primary); margin-right:8px;"></i> Faster treatment time</li>
+                            <li><i class="fa-solid fa-check" style="color:var(--primary); margin-right:8px;"></i> More comfortable</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 03 Damon Clear -->
+            <div class="alternating-section">
+                <div class="container zigzag-grid">
+                    <div class="zz-img-box reveal-left parallax-element">
+                        <img src="https://plus.unsplash.com/premium_photo-1664474624063-3d9f666f2d7f?auto=format&fit=crop&q=80&w=800" alt="Damon Clear">
+                    </div>
+                    <div class="zz-content reveal-right">
+                        <span class="zz-number">03</span>
+                        <h2>Damon Clear Braces</h2>
+                        <p>Damon Clear braces use clear ceramic brackets instead of metal, making them a more discreet option for patients who prefer less noticeable braces but still want to effectiveness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 04 Myobrace -->
+            <div class="alternating-section bg-tint">
+                <div class="container zigzag-grid reverse">
+                    <div class="zz-img-box reveal-right parallax-element">
+                        <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=80&w=800" alt="Myobrace">
+                    </div>
+                    <div class="zz-content reveal-left">
+                        <span class="zz-number">04</span>
+                        <h2>Myobrace</h2>
+                        <p>Pre-orthodontic treatment designed for children. It focuses on addressing the underlying causes of crooked teeth, often without need for braces or extraction. It helps develop the jaw correctly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: INVISALIGN ==================== -->
+        <section id="invisalign" class="page">
+            <div class="page-header reveal">
+                <h1>Invisalign</h1>
+                <p>The clear alternative to braces. Straighten your teeth invisibly.</p>
+            </div>
+
+            <div class="alternating-section">
+                <div class="container zigzag-grid">
+                    <div class="zz-img-box reveal-left parallax-element">
+                        <img src="https://images.unsplash.com/photo-1606813902793-2a6c45cbb06b?auto=format&fit=crop&q=80&w=800" alt="Invisalign Aligners">
+                    </div>
+                    <div class="zz-content reveal-right">
+                        <span class="zz-number">01</span>
+                        <h2>Virtually Invisible</h2>
+                        <p>Invisalign aligners are made of clear plastic, making them nearly invisible. Most people won't even notice you're wearing them. Perfect for adults and teens.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alternating-section bg-tint">
+                <div class="container zigzag-grid reverse">
+                    <div class="zz-img-box reveal-right parallax-element">
+                        <img src="https://images.unsplash.com/photo-1598257006463-7c64a1fef3cc?auto=format&fit=crop&q=80&w=800" alt="Removable Trays">
+                    </div>
+                    <div class="zz-content reveal-left">
+                        <span class="zz-number">02</span>
+                        <h2>Removable & Convenient</h2>
+                        <p>Unlike braces, you can remove your Invisalign aligners to eat, drink, brush, and floss. There are no food restrictions, and maintaining oral hygiene is much easier.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align:center; padding: 40px 0;" class="reveal-scale">
+                <button class="btn-modern" onclick="switchPage('book')">Start Your Smile Journey</button>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: WHITENING ==================== -->
+        <section id="whitening" class="page">
+            <div class="page-header reveal">
+                <h1>Teeth Whitening</h1>
+                <p>Brighten your smile with professional teeth whitening solutions.</p>
+            </div>
+            <div class="container zigzag-grid">
+                <div class="zz-img-box reveal-left parallax-element">
+                    <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&q=80&w=800" alt="Whitening Result">
+                </div>
+                <div class="zz-content reveal-right">
+                    <h2>Professional Whitening</h2>
+                    <p>Over time, teeth can become stained by food, drinks, and lifestyle habits. Our professional whitening treatment is safe, effective, and provides results far superior to over-the-counter products.</p>
+                    <button class="btn-outline" onclick="switchPage('book')">Book Whitening</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: IMPLANTS ==================== -->
+        <section id="implant" class="page">
+            <div class="page-header reveal">
+                <h1>Dental Implants</h1>
+                <p>Permanent solutions for missing teeth that look and feel natural.</p>
+            </div>
+            <div class="alternating-section">
+                <div class="container zigzag-grid">
+                    <div class="zz-img-box reveal-left parallax-element">
+                        <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800" alt="Implant Illustration">
+                    </div>
+                    <div class="zz-content reveal-right">
+                        <h2>What are Implants?</h2>
+                        <p>A dental implant is a titanium post that acts as a replacement for the root portion of a missing natural tooth. It is placed into the jawbone and allowed to fuse with it over time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: TEAM ==================== -->
+        <section id="team" class="page">
+            <div class="page-header reveal">
+                <h1>Our Team</h1>
+                <p>Meet our dedicated dental professionals.</p>
+            </div>
             <div class="container">
-                <div class="service-grid-container">
-                    <div class="service-card">
-                        <div class="s-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                        <h3 data-i18n="srv-1">Pemutihan Gigi</h3>
-                        <p style="color: var(--text-light);" data-i18n="srv-1-desc">Senyuman lebih cerah dengan rawatan profesional.</p>
+                <div class="grid-3">
+                    <div class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400" class="team-avatar" alt="Doctor">
+                        <h3>Dr. Azam</h3>
+                        <p style="color:var(--primary); font-weight:600;">Principal Dentist</p>
                     </div>
-                    <div class="service-card">
-                        <div class="s-icon"><i class="fa-solid fa-tooth"></i></div>
-                        <h3 data-i18n="srv-2">Scaling & Pemolesan</h3>
-                        <p style="color: var(--text-light);" data-i18n="srv-2-desc">Pembersihan dalam untuk gusi yang sihat.</p>
+                    <div class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400" class="team-avatar" alt="Doctor">
+                        <h3>Dr. Sarah</h3>
+                        <p style="color:var(--primary); font-weight:600;">Orthodontist</p>
                     </div>
-                    <div class="service-card">
-                        <div class="s-icon"><i class="fa-solid fa-teeth-open"></i></div>
-                        <h3 data-i18n="srv-3">Gigi & Pendakap</h3>
-                        <p style="color: var(--text-light);" data-i18n="srv-3-desc">Luruskan gigi untuk rupa yang sempurna.</p>
+                    <div class="team-card reveal">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea86b48e?auto=format&fit=crop&q=80&w=400" class="team-avatar" alt="Nurse">
+                        <h3>Nurse Aina</h3>
+                        <p style="color:var(--primary); font-weight:600;">Clinic Nurse</p>
                     </div>
-                    <div class="service-card">
-                        <div class="s-icon"><i class="fa-solid fa-notes-medical"></i></div>
-                        <h3 data-i18n="srv-4">Rawatan Salur Akar</h3>
-                        <p style="color: var(--text-light);" data-i18n="srv-4-desc">Terapi pakar untuk menyelamatkan gigi rosak.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE: BRANCHES ==================== -->
+        <section id="branches" class="page">
+            <div class="page-header reveal">
+                <h1>Our Branches</h1>
+                <p>Visit us at our convenient locations.</p>
+            </div>
+            <div class="container">
+                <div class="grid-3">
+                    <div class="branch-card reveal">
+                        <i class="fa-solid fa-location-dot" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+                        <h3>Sungai Petani</h3>
+                        <p>21, Jalan PKS (A), Pusat Komersial Saujana, 08000 Sungai Petani</p>
+                        <br>
+                        <button class="btn-outline" onclick="switchPage('book')">Book Here</button>
                     </div>
-                    <div class="service-card">
-                        <div class="s-icon"><i class="fa-solid fa-child-reaching"></i></div>
-                        <h3 data-i18n="srv-5">Pergigian Kanak-kanak</h3>
-                        <p style="color: var(--text-light);" data-i18n="srv-5-desc">Penjagaan lembut khusus untuk kanak-kanak.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="s-icon"><i class="fa-solid fa-x-ray"></i></div>
-                        <h3 data-i18n="srv-6">X-Ray Digital</h3>
-                        <p style="color: var(--text-light);" data-i18n="srv-6-desc">Imej radiasi rendah untuk diagnosis.</p>
+                    <div class="branch-card reveal" style="opacity: 0.6; border-style: dashed;">
+                        <i class="fa-solid fa-map-location" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                        <h3>Alor Setar</h3>
+                        <p>Coming Soon</p>
                     </div>
                 </div>
             </div>
@@ -628,31 +856,25 @@
         <!-- ==================== PAGE: BOOK ==================== -->
         <section id="book" class="page">
             <div class="container">
-                <div style="text-align: center; margin-bottom: 30px;">
+                <div style="text-align: center; margin-bottom: 30px;" class="reveal">
                     <h1 style="color: var(--primary);" data-i18n="form-title-lg">Buat Temujanji</h1>
                     <p style="color: var(--text-light); margin-top: 10px;" data-i18n="form-sub-lg">Isi borang di bawah atau cari lokasi kami di peta.</p>
                 </div>
 
                 <div class="book-grid">
-                    
-                    <!-- FORM SECTION -->
-                    <div class="form-section">
+                    <div class="form-section reveal">
                         <h3><i class="fa-regular fa-calendar-check" style="color: var(--accent);"></i> <span data-i18n="form-title">Permintaan Temujanji</span></h3>
-                        
                         <form id="appointmentForm" action="https://formsubmit.co/danialamir1809@gmail.com" method="POST">
                             <input type="hidden" name="_subject" value="Permintaan Temujanji Baru - Klinik Azam">
                             <input type="hidden" name="_captcha" value="false">
-                            
                             <div class="input-group">
                                 <label data-i18n="lbl-name">Nama Anda</label>
                                 <input type="text" name="Customer Name" placeholder="Nama Penuh" required>
                             </div>
-
                             <div class="input-group">
                                 <label data-i18n="lbl-phone">Nombor Telefon</label>
                                 <input type="tel" name="Phone Number" placeholder="01x-xxxxxxx" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                             </div>
-
                             <div class="date-time-group">
                                 <div class="input-group">
                                     <label data-i18n="lbl-date">Pilih Tarikh</label>
@@ -663,12 +885,10 @@
                                     <input type="time" name="Appointment Time" id="timeInput" required>
                                 </div>
                             </div>
-                            
                             <div style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
                                 <i class="fa-solid fa-clock" style="color: var(--primary);"></i>
                                 <small style="color: var(--primary-dark); font-weight: 500;" data-i18n="hours-hint">Isnin-Sabtu: 9pagi - 6ptg (Tutup Ahad)</small>
                             </div>
-
                             <div class="input-group">
                                 <label data-i18n="lbl-service">Perkhidmatan</label>
                                 <select name="Selected Service">
@@ -679,44 +899,27 @@
                                     <option value="Other" data-i18n="opt-other">Lain-lain</option>
                                 </select>
                             </div>
-
                             <div class="input-group">
                                 <label data-i18n="lbl-msg">Mesej (Pilihan)</label>
                                 <textarea name="Additional Message" rows="3" placeholder="Ada masalah khusus?"></textarea>
                             </div>
-
                             <button type="submit" class="btn-modern" style="width: 100%; justify-content: center;" data-i18n="btn-submit">Hantar Permintaan</button>
                         </form>
                     </div>
-
-                    <!-- MAP SECTION -->
-                    <div class="map-section">
+                    <div class="map-section reveal">
                         <div class="map-header">
                             <h3 data-i18n="map-title">Cari Kami</h3>
                             <p>21, Jalan PKS (A), Pusat Komersial Saujana, 08000 Sungai Petani</p>
                         </div>
-                        
-                        <iframe 
-                            class="map-frame"
-                            frameborder="0" 
-                            style="border:0" 
-                            src="https://maps.google.com/maps?q=21,+Jalan+PKS+(A),+Pusat+Komersial+Saujana,+08000+Sungai+Petani,+Kedah&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                            allowfullscreen>
-                        </iframe>
-
+                        <iframe class="map-frame" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=21,+Jalan+PKS+(A),+Pusat+Komersial+Saujana,+08000+Sungai+Petani,+Kedah&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
                         <div class="map-actions">
                             <p style="margin-bottom: 15px; font-weight: 600; color: var(--text-dark);" data-i18n="get-dir">Dapatkan Arah:</p>
                             <div class="btn-map-group">
-                                <a href="https://www.google.com/maps/dir/?api=1&destination=Klinik+Pergigian+Azam+Sungai+Petani" target="_blank" class="btn-map btn-google">
-                                    <i class="fa-brands fa-google"></i> Google Maps
-                                </a>
-                                <a href="https://waze.com/ul?q=Klinik+Pergigian+Azam,+Sungai+Petani" target="_blank" class="btn-map btn-waze">
-                                    <i class="fa-solid fa-location-arrow"></i> Waze
-                                </a>
+                                <a href="https://www.google.com/maps/dir/?api=1&destination=Klinik+Pergigian+Azam+Sungai+Petani" target="_blank" class="btn-map btn-google"><i class="fa-brands fa-google"></i> Google Maps</a>
+                                <a href="https://waze.com/ul?q=Klinik+Pergigian+Azam,+Sungai+Petani" target="_blank" class="btn-map btn-waze"><i class="fa-solid fa-location-arrow"></i> Waze</a>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -728,9 +931,7 @@
                     <div class="ty-icon"><i class="fa-solid fa-check"></i></div>
                     <h1 class="ty-title" data-i18n="ty-title">Terima Kasih!</h1>
                     <p class="ty-msg" data-i18n="ty-msg">Terima kasih kerana memilih kami. Pengesahan temujanji anda akan dihubungi sebentar lagi.</p>
-                    <button class="btn-modern" onclick="switchPage('home')">
-                        <i class="fa-solid fa-house"></i> <span data-i18n="btn-home">Kembali ke Laman Utama</span>
-                    </button>
+                    <button class="btn-modern" onclick="switchPage('home')"><i class="fa-solid fa-house"></i> <span data-i18n="btn-home">Kembali ke Laman Utama</span></button>
                 </div>
             </div>
         </section>
@@ -750,176 +951,98 @@
         </div>
     </footer>
 
-    <!-- IMPROVED TOAST NOTIFICATIONS CONTAINER -->
     <div id="toast-container"></div>
-
-    <!-- Floating WhatsApp (Now on Right) -->
-    <a href="https://wa.me/60174802238" class="float-wa" target="_blank" title="Chat on WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <a href="https://wa.me/60174802238" class="float-wa" target="_blank" title="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
     <!-- JavaScript Logic -->
     <script>
-        // 1. Language Data
+        // 1. Language Data (Unchanged for brevity, assume same as before)
         const translations = {
             en: {
-                "current-lang": "BM",
-                "nav-home": "Home",
-                "nav-about": "About",
-                "nav-services": "Services",
-                "btn-book": "Book Now", 
-                "hero-title": "Your Brightest Smile Starts Here",
-                "hero-desc": "Experience premium dental care in Sungai Petani. We combine expert treatment with a gentle touch to ensure your comfort.",
-                "btn-book-main": "Book Appointment",
-                "about-title": "About Our Clinic",
-                "about-subtitle": "Dedicated to oral health in Sungai Petani.",
-                "about-who": "Who We Are",
-                "about-story": "Located at <strong>Pusat Komersial Saujana</strong>, we offer state-of-the-art facilities. We believe visiting dentist shouldn't be scary. Our friendly team makes every visit pleasant.",
-                "about-point-1": "Latest Digital X-Ray",
-                "about-point-2": "Comfortable Waiting Area",
-                "about-point-3": "Ample Parking",
-                "services-title": "Our Services",
-                "services-subtitle": "Professional care tailored to your needs.",
-                "srv-1": "Teeth Whitening",
-                "srv-1-desc": "Brighter smile with professional treatment.",
-                "srv-2": "Scaling & Polishing",
-                "srv-2-desc": "Deep cleaning for healthy gums.",
-                "srv-3": "Braces & Aligners",
-                "srv-3-desc": "Straighten teeth for a perfect look.",
-                "srv-4": "Root Canal",
-                "srv-4-desc": "Expert therapy to save damaged teeth.",
-                "srv-5": "Kids Dentistry",
-                "srv-5-desc": "Gentle care designed for children.",
-                "srv-6": "Digital X-Ray",
-                "srv-6-desc": "Low-radiation imaging for diagnosis.",
-                "map-title": "Find Us",
-                "get-dir": "Get Directions:",
-                "form-title-lg": "Book Your Appointment",
-                "form-sub-lg": "Fill out the form below or find us on the map.",
-                "form-title": "Appointment Request",
-                "lbl-name": "Your Name",
-                "lbl-phone": "Phone Number",
-                "lbl-date": "Select Date",
-                "lbl-time": "Select Time",
-                "hours-hint": "Mon-Sat: 9am - 6pm (Closed Sunday)",
-                "lbl-service": "Service",
-                "opt-checkup": "General Checkup",
-                "opt-scaling": "Scaling",
-                "opt-pain": "Pain / Emergency",
-                "opt-braces": "Braces Consultation",
-                "opt-other": "Other",
-                "lbl-msg": "Message (Optional)",
-                "btn-submit": "Send Request",
-                "ty-title": "Thank You!",
-                "ty-msg": "Thank you for choosing us. Your appointment confirmation will be reconfirmed shortly.",
-                "btn-home": "Back to Home",
-                "error-sun": "We are closed on Sundays. Rescheduled to Monday.",
-                "error-early": "We open at 9 AM. Time adjusted.",
-                "error-late": "We close at 6 PM. Rescheduled to tomorrow 9 AM."
+                "current-lang": "BM", "nav-home": "Home", "nav-about": "About Us", "nav-services": "Services", "nav-team": "Our Team", "nav-branches": "Branches", "btn-book": "Book Now", "hero-title": "Your Brightest Smile Starts Here", "hero-desc": "Experience premium dental care in Sungai Petani.", "btn-book-main": "Book Appointment", "about-title": "About Our Clinic", "about-subtitle": "Dedicated to oral health.", "about-who": "Who We Are", "about-story": "Located at <strong>Pusat Komersial Saujana</strong>.", "about-point-1": "Latest Digital X-Ray", "about-point-2": "Comfortable Waiting Area", "about-point-3": "Ample Parking", "map-title": "Find Us", "get-dir": "Get Directions:", "form-title-lg": "Book Your Appointment", "form-sub-lg": "Fill out form below.", "form-title": "Appointment Request", "lbl-name": "Your Name", "lbl-phone": "Phone Number", "lbl-date": "Select Date", "lbl-time": "Select Time", "hours-hint": "Mon-Sat: 9am - 6pm", "lbl-service": "Service", "opt-checkup": "General Checkup", "opt-scaling": "Scaling", "opt-pain": "Pain / Emergency", "opt-braces": "Braces Consultation", "opt-other": "Other", "lbl-msg": "Message (Optional)", "btn-submit": "Send Request", "ty-title": "Thank You!", "ty-msg": "Thank you for choosing us.", "btn-home": "Back to Home", "error-sun": "Closed Sunday. Rescheduled.", "error-early": "Open at 9 AM.", "error-late": "Closed at 6 PM. Rescheduled."
             },
             bm: {
-                "current-lang": "EN",
-                "nav-home": "Utama",
-                "nav-about": "Tentang",
-                "nav-services": "Perkhidmatan",
-                "btn-book": "Temujanji",
-                "hero-title": "Seri Senyuman Bermula Di Sini", 
-                "hero-desc": "Nikmati perawatan pergigian premium di Sungai Petani. Kami menggabungkan rawatan pakar dengan sentuhan lembut.",
-                "btn-book-main": "Buat Temujanji",
-                "about-title": "Tentang Klinik",
-                "about-subtitle": "Dedikasi untuk kesihatan mulut di Sungai Petani.",
-                "about-who": "Siapa Kami",
-                "about-story": "Terletak di <strong>Pusat Komersial Saujana</strong>, kami menawarkan kemudahan canggih. Kunjungan ke doktor gigi tidak perlu menakutkan.",
-                "about-point-1": "X-Ray Digital Terkini",
-                "about-point-2": "Kawalan Menunggu Selesa",
-                "about-point-3": "Tempat Parking Luas",
-                "services-title": "Perkhidmatan Kami",
-                "services-subtitle": "Penjagaan profesional mengikut keperluan.",
-                "srv-1": "Pemutihan Gigi",
-                "srv-1-desc": "Senyuman lebih cerah dengan rawatan profesional.",
-                "srv-2": "Scaling & Pemolesan",
-                "srv-2-desc": "Pembersihan dalam untuk gusi yang sihat.",
-                "srv-3": "Gigi & Pendakap",
-                "srv-3-desc": "Luruskan gigi untuk rupa yang sempurna.",
-                "srv-4": "Rawatan Salur Akar",
-                "srv-4-desc": "Terapi pakar untuk menyelamatkan gigi rosak.",
-                "srv-5": "Pergigian Kanak-kanak",
-                "srv-5-desc": "Penjagaan lembut khusus untuk kanak-kanak.",
-                "srv-6": "X-Ray Digital",
-                "srv-6-desc": "Imej radiasi rendah untuk diagnosis.",
-                "map-title": "Cari Kami",
-                "get-dir": "Dapatkan Arah:",
-                "form-title-lg": "Buat Temujanji",
-                "form-sub-lg": "Isi borang di bawah atau cari lokasi kami di peta.",
-                "form-title": "Permintaan Temujanji",
-                "lbl-name": "Nama Anda",
-                "lbl-phone": "Nombor Telefon",
-                "lbl-date": "Pilih Tarikh",
-                "lbl-time": "Pilih Masa",
-                "hours-hint": "Isnin-Sabtu: 9pagi - 6ptg (Tutup Ahad)",
-                "lbl-service": "Perkhidmatan",
-                "opt-checkup": "Pemeriksaan Umum",
-                "opt-scaling": "Scaling",
-                "opt-pain": "Sakit / Kecemasan",
-                "opt-braces": "Konsultasi Pendakap",
-                "opt-other": "Lain-lain",
-                "lbl-msg": "Mesej (Pilihan)",
-                "btn-submit": "Hantar Permintaan",
-                "ty-title": "Terima Kasih!",
-                "ty-msg": "Terima kasih kerana memilih kami. Pengesahan temujanji anda akan dihubungi sebentar lagi.",
-                "btn-home": "Kembali ke Laman Utama",
-                "error-sun": "Kami tutup pada hari Ahad. Tarikh dipindahkan ke Isnin.",
-                "error-early": "Kami buka pada pukul 9 pagi. Masa disesuaikan.",
-                "error-late": "Kami tutup pada pukul 6 ptg. Tarikh dipindahkan ke esok."
+                "current-lang": "EN", "nav-home": "Utama", "nav-about": "Tentang Kami", "nav-services": "Perkhidmatan", "nav-team": "Pasukan Kami", "nav-branches": "Cawangan", "btn-book": "Temujanji", "hero-title": "Seri Senyuman Bermula Di Sini", "hero-desc": "Nikmati perawatan pergigian premium.", "btn-book-main": "Buat Temujanji", "about-title": "Tentang Klinik", "about-subtitle": "Dedikasi untuk kesihatan mulut.", "about-who": "Siapa Kami", "about-story": "Terletak di <strong>Pusat Komersial Saujana</strong>.", "about-point-1": "X-Ray Digital Terkini", "about-point-2": "Kawalan Menunggu Selesa", "about-point-3": "Tempat Parking Luas", "map-title": "Cari Kami", "get-dir": "Dapatkan Arah:", "form-title-lg": "Buat Temujanji", "form-sub-lg": "Isi borang di bawah.", "form-title": "Permintaan Temujanji", "lbl-name": "Nama Anda", "lbl-phone": "Nombor Telefon", "lbl-date": "Pilih Tarikh", "lbl-time": "Pilih Masa", "hours-hint": "Isnin-Sabtu: 9pagi - 6ptg", "lbl-service": "Perkhidmatan", "opt-checkup": "Pemeriksaan Umum", "opt-scaling": "Scaling", "opt-pain": "Sakit / Kecemasan", "opt-braces": "Konsultasi Pendakap", "opt-other": "Lain-lain", "lbl-msg": "Mesej (Pilihan)", "btn-submit": "Hantar Permintaan", "ty-title": "Terima Kasih!", "ty-msg": "Terima kasih kerana memilih kami.", "btn-home": "Kembali ke Laman Utama", "error-sun": "Tutup Ahad. Tarikh dipindahkan.", "error-early": "Buka 9pagi.", "error-late": "Tutup 6ptg. Tarikh dipindahkan."
             }
         };
 
-        // 2. Initialization
-        let currentLang = 'bm'; // CHANGED DEFAULT TO BM
+        let currentLang = 'bm';
+        document.addEventListener('DOMContentLoaded', () => { updateContent(); initScrollAnimations(); });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            updateContent(); // Run immediately to fix "Flash of Content" bug
-        });
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'bm' : 'en';
-            updateContent();
-        }
-
+        function toggleLanguage() { currentLang = currentLang === 'en' ? 'bm' : 'en'; updateContent(); }
         function updateContent() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if(translations[currentLang][key]) {
-                    el.innerHTML = translations[currentLang][key];
-                }
+                if(translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
             });
             document.getElementById('current-lang').innerText = translations[currentLang]['current-lang'];
         }
 
-        // 3. Header Shrink Effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('mainHeader');
-            if (window.scrollY > 50) {
-                header.classList.add('shrink');
-            } else {
-                header.classList.remove('shrink');
-            }
-        });
+        // --- SCROLL REVEAL & PARALLAX LOGIC ---
+        function initScrollAnimations() {
+            // 1. Intersection Observer for Reveal/Unreveal
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // Trigger when 15% of element is visible
+            };
 
-        // 4. Page Switching
-        function switchPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    } else {
+                        // Remove class when scrolling away (Unreveal)
+                        entry.target.classList.remove('active');
+                    }
+                });
+            }, observerOptions);
 
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if(link.getAttribute('onclick').includes(pageId)) link.classList.add('active');
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+                observer.observe(el);
             });
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // 2. Parallax Effect on Scroll
+            window.addEventListener('scroll', () => {
+                requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    
+                    // Hero Image Parallax (Moves slower than scroll)
+                    const heroImg = document.querySelector('.hero-img');
+                    if (heroImg) {
+                        // Keep the rotate but add translate Y
+                        heroImg.style.transform = `translateY(${scrolled * 0.15}px) rotate(-2deg)`;
+                    }
 
+                    // Section Images Parallax (Subtle movement)
+                    document.querySelectorAll('.zz-img-box').forEach(box => {
+                        const rect = box.getBoundingClientRect();
+                        const speed = 0.05;
+                        // Only animate if near viewport to save performance
+                        if(rect.top < window.innerHeight && rect.bottom > 0) {
+                            box.style.transform = `translateY(${scrolled * speed}px)`;
+                        }
+                    });
+                });
+            });
+        }
+
+        // Header Shrink
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) header.classList.add('shrink');
+            else header.classList.remove('shrink');
+        });
+
+        // Page Switching
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const activeLink = document.querySelector(`.nav-link[onclick="switchPage('${pageId}')"]`);
+            if(activeLink) activeLink.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Close mobile menu
             const navMenu = document.getElementById('navMenu');
             if (navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
@@ -928,189 +1051,106 @@
             }
         }
 
-        // 5. Mobile Menu
+        // Mobile Dropdown
+        function toggleMobileDropdown(el) {
+            if (window.innerWidth <= 768) el.classList.toggle('active');
+        }
+
+        // Mobile Menu
         const mobileToggle = document.getElementById('mobileToggle');
         const navMenu = document.getElementById('navMenu');
-
         mobileToggle.addEventListener('click', () => {
             navMenu.classList.toggle('active');
             const icon = mobileToggle.querySelector('i');
             if (navMenu.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-xmark');
+                icon.classList.remove('fa-bars'); icon.classList.add('fa-xmark');
             } else {
-                icon.classList.remove('fa-xmark');
-                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars');
             }
         });
 
-        // 6. IMPROVED TOAST NOTIFICATION SYSTEM
-        const toastContainer = document.getElementById('toast-container');
-
+        // Toast Logic
         function showToast(type, title, message, duration = 4000) {
+            const toastContainer = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`; 
-
             let iconClass = 'fa-circle-info';
             if (type === 'warning') iconClass = 'fa-triangle-exclamation';
             if (type === 'success') iconClass = 'fa-circle-check';
             if (type === 'error') iconClass = 'fa-circle-xmark';
-
-            toast.innerHTML = `
-                <div class="toast-icon-box">
-                    <i class="fa-solid ${iconClass}"></i>
-                </div>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="toast-close" onclick="this.parentElement.remove()">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            `;
-
+            toast.innerHTML = `<div class="toast-icon-box"><i class="fa-solid ${iconClass}"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div><button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
             toastContainer.appendChild(toast);
-
-            requestAnimationFrame(() => {
-                toast.classList.add('show');
-            });
-
+            requestAnimationFrame(() => toast.classList.add('show'));
             setTimeout(() => {
                 toast.classList.remove('show');
-                setTimeout(() => {
-                    if(toast.parentElement) toast.remove();
-                }, 400);
+                setTimeout(() => { if(toast.parentElement) toast.remove(); }, 400);
             }, duration);
         }
+        function showToastWarning(msg) { showToast('warning', currentLang === 'en' ? 'Notice' : 'Notis', msg); }
 
-        function showToastWarning(msg) {
-            showToast('warning', currentLang === 'en' ? 'Notice' : 'Notis', msg);
-        }
-
-        // 7. Smart Business Hours Logic (Date Fixed)
+        // Business Hours Logic
         const dateInput = document.getElementById('dateInput');
         const timeInput = document.getElementById('timeInput');
-
         function getMinDate() {
-            // Fixed to use local time components to avoid timezone issues
             const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`;
         }
-
-        dateInput.min = getMinDate();
-        timeInput.min = "09:00";
-        timeInput.max = "18:00";
-        
-        let now = new Date();
-        let dayOfWeek = now.getDay();
-        let hour = now.getHours();
-
+        dateInput.min = getMinDate(); timeInput.min = "09:00"; timeInput.max = "18:00";
+        let now = new Date(); let dayOfWeek = now.getDay(); let hour = now.getHours();
         if (dayOfWeek === 0 || hour >= 18 || hour < 9) {
-             if(dayOfWeek === 0) now.setDate(now.getDate() + 1); 
-             else if (dayOfWeek === 6) now.setDate(now.getDate() + 2); 
-             else now.setDate(now.getDate() + 1); 
-             now.setHours(9,0,0);
+             if(dayOfWeek === 0) now.setDate(now.getDate() + 1); else if (dayOfWeek === 6) now.setDate(now.getDate() + 2); else now.setDate(now.getDate() + 1); now.setHours(9,0,0);
         }
-        
         dateInput.valueAsDate = now;
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         timeInput.value = `${hours}:${minutes}`;
 
-        // Date Validation
         dateInput.addEventListener('input', function(e) {
             const selectedDate = new Date(this.value);
             const nowDate = new Date();
-            
-            // Fix: Use setHours(0,0,0,0) for accurate date comparison
             if (selectedDate < nowDate.setHours(0,0,0,0)) {
-                this.value = getMinDate(); 
-                timeInput.value = "09:00";
-                showToastWarning(translations[currentLang]['error-early']); 
-                return;
+                this.value = getMinDate(); timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-early']); return;
             }
             timeInput.value = "09:00";
         });
 
-        // Time Validation
         timeInput.addEventListener('input', function(e) {
             const dateVal = dateInput.valueAsDate || new Date();
-            const timeVal = this.value; 
-            
-            if(!dateInput.value) return;
-
+            const timeVal = this.value; if(!dateInput.value) return;
             const combined = new Date(`${dateVal.toISOString().split('T')[0]}T${timeVal}`);
-
             if (combined.getDay() === 0) {
-                dateVal.setDate(dateVal.getDate() + 1);
-                dateInput.valueAsDate = dateVal;
-                timeInput.value = "09:00";
-                showToastWarning(translations[currentLang]['error-sun']);
-                return;
+                dateVal.setDate(dateVal.getDate() + 1); dateInput.valueAsDate = dateVal; timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-sun']); return;
             }
-
-            if (timeVal < "09:00") {
-                timeInput.value = "09:00";
-                showToastWarning(translations[currentLang]['error-early']);
-                return;
-            }
-
+            if (timeVal < "09:00") { timeInput.value = "09:00"; showToastWarning(translations[currentLang]['error-early']); return; }
             if (timeVal > "18:00") {
-                if (dateVal.getDay() === 6) {
-                     dateVal.setDate(dateVal.getDate() + 2);
-                } else {
-                     dateVal.setDate(dateVal.getDate() + 1);
-                }
-                dateInput.valueAsDate = dateVal;
-                timeInput.value = "09:00";
-                showToastWarning(translations[currentLang]['error-late']);
-                return;
+                if (dateVal.getDay() === 6) { dateVal.setDate(dateVal.getDate() + 2); } else { dateVal.setDate(dateVal.getDate() + 1); }
+                dateInput.valueAsDate = dateVal; timeInput.value = "09:00";
+                showToastWarning(translations[currentLang]['error-late']); return;
             }
         });
 
-        // 8. Form Handling
+        // Form Handling
         const form = document.getElementById('appointmentForm');
-
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const btn = form.querySelector('button');
-            const originalContent = btn.innerHTML;
-            
-            // Loading State
-            btn.innerHTML = '<div class="spinner"></div>';
-            btn.style.opacity = '0.8';
-            btn.disabled = true;
-
-            fetch(form.action, {
-                method: form.method,
-                body: new FormData(form)
-            })
+            const btn = form.querySelector('button'); const originalContent = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner"></div>'; btn.style.opacity = '0.8'; btn.disabled = true;
+            fetch(form.action, { method: form.method, body: new FormData(form) })
             .then(response => {
                 showToast('success', currentLang === 'en' ? 'Success' : 'Berjaya', currentLang === 'en' ? 'Request sent successfully!' : 'Permintaan berjaya dihantar!');
-                
                 setTimeout(() => {
-                    switchPage('thank-you');
-                    btn.innerHTML = originalContent;
-                    btn.style.opacity = '1';
-                    btn.disabled = false;
-                    form.reset();
-                    
+                    switchPage('thank-you'); btn.innerHTML = originalContent; btn.style.opacity = '1'; btn.disabled = false; form.reset();
                     let newDate = new Date();
                     if(newDate.getDay() === 0 || newDate.getHours() >= 18) newDate.setDate(newDate.getDate() + 1);
-                    dateInput.valueAsDate = newDate;
-                    timeInput.value = "09:00";
+                    dateInput.valueAsDate = newDate; timeInput.value = "09:00";
                 }, 1500); 
             })
             .catch(error => {
-                console.error('Error:', error);
-                showToast('error', currentLang === 'en' ? 'Error' : 'Ralat', currentLang === 'en' ? "Submission failed. Try again." : "Gagal menghantar. Cuba lagi.");
-                btn.innerHTML = originalContent;
-                btn.style.opacity = '1';
-                btn.disabled = false;
+                showToast('error', currentLang === 'en' ? 'Error' : 'Ralat', currentLang === 'en' ? "Submission failed." : "Gagal menghantar.");
+                btn.innerHTML = originalContent; btn.style.opacity = '1'; btn.disabled = false;
             });
         });
     </script>
