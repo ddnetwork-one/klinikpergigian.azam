@@ -403,15 +403,32 @@
             width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px;
             font-family: inherit; transition: var(--transition); background: #fff;
             font-size: 0.95rem; color: var(--text-dark);
+            appearance: none; /* Normalize select styles */
         }
+        
+        /* Custom Arrow for Select */
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--text-light); pointer-events: none;
+        }
+
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus { 
             border-color: var(--primary); outline: none; background: #fff;
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
         }
         
+        /* Disabled options style */
+        option:disabled {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
         /* Validation States for Inputs */
-        .input-group.success input { border-color: var(--success); background: var(--success-bg); }
-        .input-group.info input { border-color: var(--primary-light); }
+        .input-group.success input, .input-group.success select { border-color: var(--success); background: var(--success-bg); }
+        .input-group.info input, .input-group.info select { border-color: var(--primary-light); }
 
         /* Live Status Indicator */
         .live-status {
@@ -807,11 +824,15 @@
                                 <small style="color:var(--text-light); display:block; margin-top:4px; font-size:0.75rem;" data-i18n="hours-hint">Isnin-Sabtu: 9pagi - 6ptg</small>
                             </div>
 
-                            <!-- Time (Text Input) -->
+                            <!-- Time (Smart Select) -->
                             <div class="input-group" id="time-group">
-                                <label data-i18n="lbl-time">Masa (Taip atau Gunakan Suara)</label>
-                                <input type="text" id="bk-time" placeholder="Contoh: 9:30 AM" autocomplete="off">
-                                <small style="color:var(--text-light); display:block; margin-top:4px; font-size:0.75rem;">Format: 9:00 AM atau 2:30 PM</small>
+                                <label data-i18n="lbl-time">Masa</label>
+                                <div class="select-wrapper">
+                                    <select id="bk-time" required disabled>
+                                        <option value="" disabled selected id="time-placeholder">Sila pilih tarikh dahulu</option>
+                                    </select>
+                                </div>
+                                <small style="color:var(--text-light); display:block; margin-top:4px; font-size:0.75rem;" id="slot-hint"></small>
                             </div>
 
                             <!-- Service -->
@@ -833,7 +854,7 @@
                         </div>
                         <iframe class="map-frame" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=21,+Jalan+PKS+(A),+Pusat+Komersial+Saujana,+08000+Sungai+Petani&t=&z=15&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
                         <div style="padding:15px; background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; align-items:center; gap:10px; font-size:0.9rem; font-weight:600; color:var(--text-dark);">
-                            <i class="fa-solid fa-phone" style="color:var(--primary);"></i> 04-123 4567
+                            <i class="fa-solid fa-phone" style="color:var(--primary);"></i> +60 17-480 2238
                         </div>
                     </div>
                 </div>
@@ -875,6 +896,14 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkcWtoYWtocHZxb2RpeGVjamRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MDY2NzQsImV4cCI6MjA4NTk4MjY3NH0.r8sfbz70szeKvv_vrMn1JboYsGs6KMAxZyoSbmDYvhc';
         const { createClient } = supabase;
         const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // --- CONSTANTS ---
+        // Master list of valid time slots
+        const MASTER_SLOTS = [
+            "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+            "12:00 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM",
+            "04:30 PM", "05:00 PM", "05:30 PM"
+        ];
 
         // --- GLOBAL STATE ---
         let currentLang = 'bm';
@@ -923,10 +952,11 @@
                 "implant-title": "Dental Implants", "implant-desc": "Permanent solution for missing teeth.",
                 "branch-title": "Our Branches", "branch-subtitle": "Visit us at convenient locations.",
                 "map-title": "Find Us", "form-title-lg": "Book Appointment", "form-sub-lg": "Please fill in the details below.",
-                "lbl-name": "Your Name", "lbl-phone": "Phone", "lbl-date": "Date", "lbl-time": "Time (Type or Voice)", "hours-hint": "Mon-Sat: 9am - 6pm",
+                "lbl-name": "Your Name", "lbl-phone": "Phone", "lbl-date": "Date", "lbl-time": "Time", "hours-hint": "Mon-Sat: 9am - 6pm",
                 "lbl-service": "Service", "opt-checkup": "Checkup", "opt-scaling": "Scaling", "opt-pain": "Pain/Emergency", "opt-braces": "Braces", "opt-other": "Other",
                 "btn-submit": "Send Request", "ty-title": "Thank You!", "ty-msg": "Booking successful. We will contact you soon.", "btn-home": "Home",
-                "error-sun": "Closed on Sundays.", "error-time": "Invalid time format. Use e.g. 9:30 AM."
+                "error-sun": "Closed on Sundays.", "time-select-first": "Select a date first", "select-time": "Select Time", 
+                "slot-full": "Full", "slot-blocked": "Unavailable"
             },
             bm: {
                 "current-lang": "EN", "nav-home": "Utama", "nav-about": "Tentang Kami", "nav-services": "Perkhidmatan", 
@@ -947,10 +977,11 @@
                 "implant-title": "Dental Implant", "implant-desc": "Penyelesaian kekal untuk gigi hilang.",
                 "branch-title": "Cawangan Kami", "branch-subtitle": "Kunjungi kami di lokasi berdekatan.",
                 "map-title": "Cari Kami", "form-title-lg": "Buat Temujanji", "form-sub-lg": "Sila isikan maklumat di bawah.",
-                "lbl-name": "Nama Anda", "lbl-phone": "Telefon", "lbl-date": "Tarikh", "lbl-time": "Masa (Taip atau Suara)", "hours-hint": "Isnin-Sabtu: 9pg - 6ptg",
+                "lbl-name": "Nama Anda", "lbl-phone": "Telefon", "lbl-date": "Tarikh", "lbl-time": "Masa", "hours-hint": "Isnin-Sabtu: 9pg - 6ptg",
                 "lbl-service": "Perkhidmatan", "opt-checkup": "Pemeriksaan", "opt-scaling": "Scaling", "opt-pain": "Sakit/Kecemasan", "opt-braces": "Pendakap", "opt-other": "Lain-lain",
                 "btn-submit": "Hantar Permintaan", "ty-title": "Terima Kasih!", "ty-msg": "Tempahan berjaya. Kami akan hubungi anda.", "btn-home": "Utama",
-                "error-sun": "Tutup pada hari Ahad.", "error-time": "Format masa salah. Guna cth: 9:30 PG."
+                "error-sun": "Tutup pada hari Ahad.", "time-select-first": "Sila pilih tarikh dahulu", "select-time": "Pilih Masa",
+                "slot-full": "Penuh", "slot-blocked": "Tidak Tersedia"
             }
         };
 
@@ -959,11 +990,17 @@
             initScrollAnimations(); 
             setupDateLogic();
             setupPhoneLogic();
-            setupTimeLogic();
             await fetchServices();
         });
 
-        function toggleLanguage() { currentLang = currentLang === 'en' ? 'bm' : 'en'; updateContent(); }
+        function toggleLanguage() { 
+            currentLang = currentLang === 'en' ? 'bm' : 'en'; 
+            updateContent(); 
+            // Update Time Dropdown Placeholder if date is already selected
+            const dateVal = document.getElementById('dateInput').value;
+            if(dateVal) updateSlotOptions(dateVal);
+        }
+
         function updateContent() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -1076,82 +1113,38 @@
                         statusDiv.className = 'live-status visible info';
                     }
                     checkFormValidity();
-                }, 800); // 800ms delay
+                }, 800);
             });
         }
 
-        // --- TIME PARSING LOGIC ---
-        function setupTimeLogic() {
-            const timeInput = document.getElementById('bk-time');
-            const group = document.getElementById('time-group');
-            
-            timeInput.addEventListener('input', (e) => {
-                const val = e.target.value;
-                const formatted = parseTime(val);
-                
-                if (formatted) {
-                    // Valid format found, update UI to show formatted version
-                    // Note: We don't force overwrite input while typing to avoid annoyance,
-                    // but we can change border color to green.
-                    timeInput.dataset.validTime = formatted;
-                    group.classList.add('success');
-                } else {
-                    timeInput.dataset.validTime = "";
-                    group.classList.remove('success');
-                }
-                checkFormValidity();
-            });
-
-            // Format nicely on blur
-            timeInput.addEventListener('blur', (e) => {
-                if(e.target.dataset.validTime) {
-                    e.target.value = e.target.dataset.validTime;
-                }
-            });
-        }
-
-        function parseTime(str) {
-            // Regex: (Hours)(separator)(Minutes)(Optional AM/PM)
-            // Supports "9:30 am", "09 30 pm", "9.30am"
-            const regex = /^(\d{1,2})[:.\s](\d{2})\s*([ap]m)?$/i;
-            const match = str.match(regex);
-            
-            if (match) {
-                let hours = parseInt(match[1]);
-                let minutes = match[2];
-                let meridiem = match[3] ? match[3].toUpperCase() : null;
-
-                // Default to AM if unspecified? Or strictly require. 
-                // Let's require for clarity, or default to AM for morning hours.
-                // To be safe with user input "listen and type", let's be flexible.
-                
-                if (hours < 1 || hours > 12) return null;
-                if (parseInt(minutes) > 59) return null;
-
-                // If user typed "9:00" (no AM/PM), assume based on typical clinic hours?
-                // Let's force user to specify or default to AM for 1-11, PM for 12?
-                // Safest is to return null if AM/PM is missing to avoid 9:00 PM being booked for 9:00 AM.
-                if (!meridiem) return null;
-
-                return `${String(hours).padStart(2, '0')}:${minutes} ${meridiem}`;
-            }
-            return null;
-        }
-
-        // --- DATE LOGIC ---
+        // --- SMART TIME SLOT LOGIC ---
+        
+        // 1. Date Listener triggers Slot Update
         function setupDateLogic() {
             const now = new Date();
             const tomorrow = new Date(now);
             tomorrow.setDate(tomorrow.getDate() + 1); 
             
+            const dateInput = document.getElementById('dateInput');
             dateInput.min = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
             
             dateInput.addEventListener('change', async function() {
-                const selectedDate = new Date(this.value);
-                if(selectedDate.getDay() === 0) {
+                const selectedDate = this.value;
+                const timeSelect = document.getElementById('bk-time');
+                const timeGroup = document.getElementById('time-group');
+                
+                // Reset Time
+                timeSelect.innerHTML = `<option value="" disabled selected>Loading...</option>`;
+                timeSelect.disabled = true;
+                timeGroup.classList.remove('success');
+                checkFormValidity();
+
+                if(!selectedDate) return;
+
+                if(new Date(selectedDate).getDay() === 0) {
                     showToast('warning', 'Info', translations[currentLang]['error-sun']);
                     this.value = ''; 
-                    checkFormValidity();
+                    timeSelect.innerHTML = `<option value="" disabled selected>${translations[currentLang]['time-select-first']}</option>`;
                     return;
                 }
 
@@ -1159,21 +1152,91 @@
                 if(closedDay) {
                     showToast('warning', 'Info', 'Clinic is closed on this date.');
                     this.value = ''; 
-                    checkFormValidity();
+                    timeSelect.innerHTML = `<option value="" disabled selected>${translations[currentLang]['time-select-first']}</option>`;
                     return;
                 }
-                checkFormValidity();
+
+                // Fetch available slots
+                await updateSlotOptions(selectedDate);
             });
+        }
+
+        // 2. Fetch DB and Populate Dropdown
+        async function updateSlotOptions(dateStr) {
+            const select = document.getElementById('bk-time');
+            const hint = document.getElementById('slot-hint');
+            
+            // Fetch existing appointments for this date
+            const { data: appointments, error: aptError } = await db
+                .from('klinikazam_appointments')
+                .select('time')
+                .eq('date', dateStr);
+            
+            // Fetch blocked slots for this date
+            const { data: blockedSlots, error: blockError } = await db
+                .from('klinikazam_slots')
+                .select('time')
+                .eq('date', dateStr)
+                .eq('type', 'blocked');
+
+            // Create a Set of unavailable times for fast lookup
+            const takenTimes = new Set(appointments ? appointments.map(a => a.time) : []);
+            const blockedTimes = new Set(blockedSlots ? blockedSlots.map(b => b.time) : []);
+
+            // Clear current options
+            select.innerHTML = '';
+
+            // Add default placeholder
+            const placeholder = document.createElement('option');
+            placeholder.value = "";
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            placeholder.text = translations[currentLang]['select-time'];
+            select.appendChild(placeholder);
+
+            let availableCount = 0;
+
+            // Populate slots
+            MASTER_SLOTS.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot;
+
+                if (takenTimes.has(slot)) {
+                    option.disabled = true;
+                    option.text = `${slot} (${translations[currentLang]['slot-full']})`;
+                    option.style.color = '#94a3b8';
+                } else if (blockedTimes.has(slot)) {
+                    option.disabled = true;
+                    option.text = `${slot} (${translations[currentLang]['slot-blocked']})`;
+                    option.style.color = '#94a3b8';
+                } else {
+                    option.text = slot;
+                    availableCount++;
+                }
+                select.appendChild(option);
+            });
+
+            if (availableCount > 0) {
+                select.disabled = false;
+                hint.innerText = ""; // Clear hint
+                hint.style.color = "var(--success)";
+            } else {
+                select.disabled = true;
+                select.innerHTML = `<option value="" disabled selected>No slots available</option>`;
+            }
+            
+            checkFormValidity();
         }
 
         function checkFormValidity() {
             const btn = document.getElementById('submitBtn');
             const date = document.getElementById('dateInput').value;
-            const time = document.getElementById('bk-time').dataset.validTime;
+            // Select value check is sufficient now (disabled options can't be selected)
+            const time = document.getElementById('bk-time').value; 
             const service = document.getElementById('bk-service').value;
             const phone = document.getElementById('bk-phone').value.replace(/[^0-9]/g, '').length;
             
-            // Valid if: Date picked, Time format valid, Service picked, Phone > 5 digits
+            // Valid if: Date picked, Time selected (value exists), Service picked, Phone > 5 digits
             if(date && time && service && phone >= 5) {
                 btn.disabled = false;
             } else {
@@ -1205,7 +1268,7 @@
                 const name = document.getElementById('bk-name').value;
                 const phone = document.getElementById('bk-phone').value.replace(/[^0-9]/g, '');
                 const dateStr = document.getElementById('dateInput').value;
-                const timeStr = document.getElementById('bk-time').dataset.validTime; // Use the formatted version
+                const timeStr = document.getElementById('bk-time').value; // Directly from select
                 
                 const serviceId = parseInt(document.getElementById('bk-service').value);
                 const service = services.find(s => s.id === serviceId) || { name: 'General Checkup', price: 0 };
@@ -1213,7 +1276,6 @@
                 // 1. Check/Create Patient
                 let patientId;
                 if (isPatientRegistered) {
-                    // Find ID again (already have name from lookup)
                     const { data } = await db.from('klinikazam_patients').select('id').eq('phone', phone).single();
                     patientId = data.id;
                 } else {
@@ -1231,7 +1293,7 @@
                     id: aptId,
                     patient_id: patientId,
                     date: dateStr,
-                    time: timeStr, // Stored as "09:30 AM"
+                    time: timeStr, 
                     items: [{ id: serviceId, qty: 1, price: service.price }],
                     status: 'Pending',
                     payment_method: 'CASH',
@@ -1250,7 +1312,10 @@
                     document.getElementById('phone-group').classList.remove('success', 'info');
                     document.getElementById('phone-status').classList.remove('visible', 'success', 'info');
                     document.getElementById('time-group').classList.remove('success');
-                    document.getElementById('bk-time').dataset.validTime = "";
+                    // Reset Time Select
+                    const timeSelect = document.getElementById('bk-time');
+                    timeSelect.innerHTML = `<option value="" disabled selected>${translations[currentLang]['time-select-first']}</option>`;
+                    timeSelect.disabled = true;
                 }, 1500);
 
             } catch (err) {
