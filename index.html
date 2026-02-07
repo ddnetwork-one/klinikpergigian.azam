@@ -13,8 +13,11 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
-        /* --- CSS Variables & Design System (Refined for "Friendly/Small") --- */
+        /* --- CSS Variables & Design System --- */
         :root {
             --primary: #0284c7;
             --primary-dark: #0369a1;
@@ -22,16 +25,21 @@
             --secondary: #0ea5e9; 
             --accent: #14b8a6; 
             --text-dark: #0f172a;
-            --text-light: #64748b; /* Darker grey for better readability */
+            --text-light: #64748b; 
             --bg-white: #ffffff;
             --bg-offwhite: #f8fafc;
             --bg-tint: #f0f9ff; 
-            --radius-lg: 16px; /* Reduced from 20px for a tighter look */
+            --radius-lg: 16px; 
             --radius-md: 12px;
             --shadow-sm: 0 2px 4px -1px rgba(0,0,0,0.05);
             --shadow-md: 0 6px 15px -5px rgba(0, 0, 0, 0.05);
             --shadow-lg: 0 12px 24px -5px rgba(2, 132, 199, 0.15);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            
+            /* Status Colors */
+            --success: #10b981; 
+            --success-bg: #dcfce7;
+            --warning: #f59e0b; 
         }
 
         /* --- Reset & Base --- */
@@ -46,7 +54,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            font-size: 15px; /* Slightly smaller base font */
+            font-size: 15px; 
             -webkit-font-smoothing: antialiased;
         }
 
@@ -65,7 +73,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            padding: 12px 0; /* Reduced padding */
+            padding: 12px 0; 
             transition: padding 0.3s ease, background 0.3s;
         }
 
@@ -79,7 +87,7 @@
         }
 
         .logo-img {
-            height: 40px; width: 40px; border-radius: 10px; object-fit: cover; /* Smaller logo */
+            height: 40px; width: 40px; border-radius: 10px; object-fit: cover; 
             background-color: white; border: 2px solid var(--primary-light);
             transition: var(--transition);
         }
@@ -91,7 +99,7 @@
             font-size: 1.1rem; line-height: 1.1;
         }
 
-        .nav-menu { display: flex; gap: 25px; align-items: center; } /* Tighter gap */
+        .nav-menu { display: flex; gap: 25px; align-items: center; } 
         
         .nav-item { position: relative; cursor: pointer; }
 
@@ -154,13 +162,13 @@
         }
         .lang-switch:hover { background: #fff; border-color: var(--primary); transform: translateY(-1px); }
 
-        /* --- BUTTONS (Refined) --- */
+        /* --- BUTTONS --- */
         .btn-modern {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white; 
-            padding: 10px 24px; /* Smaller padding */
+            padding: 10px 24px; 
             border-radius: 50px; 
-            font-weight: 600; font-size: 0.9rem; /* Smaller font */
+            font-weight: 600; font-size: 0.9rem; 
             border: none; cursor: pointer;
             box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
             display: inline-flex; align-items: center; gap: 8px;
@@ -170,6 +178,12 @@
         .btn-modern:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(2, 132, 199, 0.3);
+        }
+        .btn-modern:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-outline {
@@ -195,7 +209,7 @@
             animation: fadeInPage 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             flex: 1;
             padding-top: 20px;
-            padding-bottom: 40px; /* Less bottom padding */
+            padding-bottom: 40px; 
         }
         .page.active { display: block; }
 
@@ -216,14 +230,14 @@
 
         /* --- HOME PAGE STYLES --- */
         .hero-section {
-            padding: 40px 0 60px; /* Reduced padding */
+            padding: 40px 0 60px; 
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px; 
             align-items: center;
         }
         .hero-text h1 { 
-            font-size: 2.8rem; /* Smaller font */
+            font-size: 2.8rem; 
             margin-bottom: 16px; 
             color: var(--primary-dark); 
             line-height: 1.15;
@@ -264,7 +278,7 @@
         .zigzag-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px; /* Tighter gap */
+            gap: 40px; 
             align-items: center;
         }
         .zigzag-grid.reverse { direction: rtl; }
@@ -274,7 +288,7 @@
             border-radius: 12px;
             box-shadow: var(--shadow-md);
             width: 100%;
-            height: 280px; /* Fixed height for consistency */
+            height: 280px; 
             object-fit: cover;
             transition: transform 0.3s ease;
         }
@@ -286,67 +300,58 @@
         .zz-content h2 { font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 12px; }
         .zz-content p { color: var(--text-light); margin-bottom: 16px; font-size: 0.95rem; line-height: 1.6; }
 
-        /* --- TEAM & BRANCHES (IMPROVED UI) --- */
+        /* --- TEAM & BRANCHES --- */
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 10px 0; }
 
-        /* Card Base Style */
         .card-base {
             background: white;
             border-radius: var(--radius-lg);
-            padding: 24px; /* Less padding */
+            padding: 0; 
             text-align: center;
             box-shadow: var(--shadow-sm);
             border: 1px solid #f1f5f9;
             transition: var(--transition);
             position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         .card-base:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-light); }
 
-        .team-avatar {
-            width: 100px; height: 100px; /* Smaller avatar */
-            border-radius: 50%;
-            margin: 0 auto 16px;
-            object-fit: cover;
-            border: 3px solid var(--primary-light);
-        }
-        .team-name { font-size: 1.1rem; margin-bottom: 4px; }
-        .team-role { color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0; }
-
-        /* Branch Card Specific (Enhanced) */
-        .branch-card {
-            padding: 0; /* Remove padding to use full card space */
-            text-align: left;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-            display: flex; flex-direction: column;
-        }
-        .branch-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-        
+        /* Map Visual Area */
         .branch-map-visual {
-            height: 140px;
-            background-color: #cbd5e1;
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            height: 200px;
+            width: 100%;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            background: #e2e8f0;
         }
-        .branch-map-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.4s; }
-        .branch-card:hover .branch-map-visual img { opacity: 1; transform: scale(1.05); }
         
+        /* Iframe styling for real maps */
+        .branch-map-visual iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(20%);
+            transition: filter 0.3s;
+        }
+        .card-base:hover .branch-map-visual iframe {
+            filter: grayscale(0%);
+        }
+
         .status-badge {
-            position: absolute; top: 10px; right: 10px;
-            background: rgba(255,255,255,0.9);
-            padding: 4px 10px; border-radius: 20px;
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(4px);
+            padding: 6px 12px; border-radius: 20px;
             font-size: 0.75rem; font-weight: 700;
             color: var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 2;
+            border: 1px solid rgba(255,255,255,0.5);
         }
-        .status-badge.soon { color: #f59e0b; }
+        .status-badge.soon { color: var(--warning); }
 
         .branch-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
-        .branch-title { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .branch-title { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; justify-content: center; }
         .branch-address { font-size: 0.9rem; color: var(--text-light); line-height: 1.5; margin-bottom: 16px; flex-grow: 1; }
         
         .branch-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
@@ -369,7 +374,7 @@
         /* --- BOOK PAGE STYLES --- */
         .book-grid {
             display: grid; 
-            grid-template-columns: 1.5fr 1fr; /* Adjusted ratio */
+            grid-template-columns: 1.5fr 1fr; 
             gap: 30px;
             margin: 10px auto 40px; 
             align-items: start;
@@ -377,7 +382,7 @@
         .form-section {
             background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
             border-radius: var(--radius-lg); overflow: hidden;
-            box-shadow: var(--shadow-md); padding: 30px; /* Less padding */
+            box-shadow: var(--shadow-md); padding: 30px; 
             border: 1px solid #e2e8f0;
             order: 1; 
         }
@@ -392,7 +397,7 @@
         .map-frame { width: 100%; height: 300px; border: none; filter: grayscale(20%); transition: filter 0.3s; }
         
         /* Form Inputs */
-        .input-group { margin-bottom: 20px; }
+        .input-group { margin-bottom: 20px; position: relative; }
         .input-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dark); }
         .input-group input, .input-group select, .input-group textarea {
             width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px;
@@ -403,41 +408,22 @@
             border-color: var(--primary); outline: none; background: #fff;
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
         }
+        
+        /* Validation States for Inputs */
+        .input-group.success input { border-color: var(--success); background: var(--success-bg); }
+        .input-group.info input { border-color: var(--primary-light); }
 
-        /* Time Slot System */
-        #time-slot-wrapper {
-            display: none; 
-            margin-top: 10px;
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+        /* Live Status Indicator */
+        .live-status {
+            position: absolute; right: 12px; top: 38px;
+            font-size: 0.75rem; font-weight: 600;
+            display: flex; align-items: center; gap: 4px;
+            opacity: 0; transition: opacity 0.2s;
+            pointer-events: none;
         }
-        #time-slot-wrapper.active { display: block; animation: fadeIn 0.3s ease; }
-
-        .time-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .time-slot {
-            background: white;
-            border: 2px solid #e2e8f0;
-            padding: 10px 4px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.8rem;
-            position: relative;
-        }
-        .time-slot:hover:not(.booked) { border-color: var(--primary); color: var(--primary); background: var(--bg-tint); }
-        .time-slot.selected { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
-        .time-slot.booked { background: #f1f5f9; border-color: #f1f5f9; color: #cbd5e1; cursor: not-allowed; text-decoration: line-through; }
+        .live-status.visible { opacity: 1; }
+        .live-status.success { color: var(--success); }
+        .live-status.info { color: var(--text-light); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -505,6 +491,9 @@
             .form-section, .map-section { padding: 20px; }
             #toast-container { left: 15px; right: 15px; bottom: 80px; }
             .toast { min-width: auto; width: 100%; }
+            
+            /* Move live status to below input on mobile for space */
+            .live-status { position: static; margin-top: 6px; opacity: 1; justify-content: flex-start; }
         }
     </style>
 </head>
@@ -606,7 +595,7 @@
             </div>
         </section>
 
-        <!-- ==================== BRACES (UPDATED LIST & ZIGZAG) ==================== -->
+        <!-- ==================== BRACES ==================== -->
         <section id="braces" class="page">
             <div class="page-header reveal">
                 <h1>Orthodontics & Braces</h1>
@@ -721,7 +710,7 @@
             </div>
         </section>
 
-        <!-- ==================== BRANCHES (ENHANCED) ==================== -->
+        <!-- ==================== BRANCHES (WITH REAL MAPS) ==================== -->
         <section id="branches" class="page">
             <div class="page-header reveal">
                 <h1 data-i18n="branch-title">Cawangan Kami</h1>
@@ -732,7 +721,13 @@
                     <!-- Branch 1: Active -->
                     <div class="card-base branch-card reveal">
                         <div class="branch-map-visual">
-                             <img src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&q=80&w=400" alt="Map Visual">
+                            <!-- REAL MAP IFRAME -->
+                            <iframe 
+                                src="https://maps.google.com/maps?q=21,+Jalan+PKS+(A),+Pusat+Komersial+Saujana,+08000+Sungai+Petani&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
                             <div class="status-badge"><i class="fa-solid fa-circle-check" style="margin-right:4px;"></i> BUKA</div>
                         </div>
                         <div class="branch-content">
@@ -755,10 +750,15 @@
                         </div>
                     </div>
                     
-                    <!-- Branch 2: Coming Soon -->
+                    <!-- Branch 2: Coming Soon (Showing Alor Setar Area Map) -->
                     <div class="card-base branch-card disabled reveal">
                         <div class="branch-map-visual" style="filter: grayscale(1);">
-                            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=400" alt="Coming Soon">
+                            <!-- REAL MAP IFRAME (Generic Alor Setar) -->
+                            <iframe 
+                                src="https://maps.google.com/maps?q=Alor+Setar,+Kedah&t=&z=12&ie=UTF8&iwloc=&output=embed" 
+                                allowfullscreen="" 
+                                loading="lazy">
+                            </iframe>
                             <div class="status-badge soon"><i class="fa-solid fa-clock" style="margin-right:4px;"></i> COMING SOON</div>
                         </div>
                         <div class="branch-content">
@@ -779,44 +779,46 @@
             <div class="container">
                 <div style="text-align: center; margin-bottom: 20px;" class="reveal">
                     <h1 style="color: var(--primary); font-size: 1.8rem;" data-i18n="form-title-lg">Buat Temujanji</h1>
-                    <p style="color: var(--text-light); font-size: 0.9rem;" data-i18n="form-sub-lg">Pilih tarikh untuk melihat masa yang ada.</p>
+                    <p style="color: var(--text-light); font-size: 0.9rem;" data-i18n="form-sub-lg">Sila isikan maklumat di bawah.</p>
                 </div>
 
                 <div class="book-grid">
                     <div class="form-section reveal">
-                        <form id="appointmentForm" action="https://formsubmit.co/danialamir1809@gmail.com" method="POST">
-                            <input type="hidden" name="_subject" value="Permintaan Temujanji Baru - Klinik Azam">
-                            <input type="hidden" name="_captcha" value="false">
-                            <input type="hidden" id="selectedTimeInput" name="Appointment Time" required>
-                            
+                        <form id="appointmentForm">
+                            <!-- Name -->
                             <div class="input-group">
                                 <label data-i18n="lbl-name">Nama Anda</label>
-                                <input type="text" name="Customer Name" placeholder="Nama Penuh" required>
+                                <input type="text" id="bk-name" placeholder="Nama Penuh" required>
                             </div>
-                            <div class="input-group">
+
+                            <!-- Phone with Live Status -->
+                            <div class="input-group" id="phone-group">
                                 <label data-i18n="lbl-phone">Nombor Telefon</label>
-                                <input type="tel" name="Phone Number" placeholder="01x-xxxxxxx" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <input type="tel" id="bk-phone" placeholder="01x-xxxxxxx" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <div class="live-status" id="phone-status">
+                                    <i class="fa-solid fa-circle-notch fa-spin"></i> Checking...
+                                </div>
                             </div>
                             
+                            <!-- Date -->
                             <div class="input-group">
                                 <label data-i18n="lbl-date">Pilih Tarikh</label>
-                                <input type="date" name="Appointment Date" id="dateInput" required>
+                                <input type="date" id="dateInput" required>
                                 <small style="color:var(--text-light); display:block; margin-top:4px; font-size:0.75rem;" data-i18n="hours-hint">Isnin-Sabtu: 9pagi - 6ptg</small>
                             </div>
 
-                            <div id="time-slot-wrapper">
-                                <label style="font-weight: 600; margin-bottom: 8px; display:block; color: var(--text-dark); font-size:0.85rem;" data-i18n="lbl-time">Pilih Masa</label>
-                                <div class="time-grid" id="timeGrid"></div>
+                            <!-- Time (Text Input) -->
+                            <div class="input-group" id="time-group">
+                                <label data-i18n="lbl-time">Masa (Taip atau Gunakan Suara)</label>
+                                <input type="text" id="bk-time" placeholder="Contoh: 9:30 AM" autocomplete="off">
+                                <small style="color:var(--text-light); display:block; margin-top:4px; font-size:0.75rem;">Format: 9:00 AM atau 2:30 PM</small>
                             </div>
 
+                            <!-- Service -->
                             <div class="input-group" style="margin-top: 20px;">
                                 <label data-i18n="lbl-service">Perkhidmatan</label>
-                                <select name="Selected Service">
-                                    <option value="General Checkup" data-i18n="opt-checkup">Pemeriksaan Umum</option>
-                                    <option value="Scaling" data-i18n="opt-scaling">Scaling</option>
-                                    <option value="Pain / Emergency" data-i18n="opt-pain">Sakit / Kecemasan</option>
-                                    <option value="Braces Consultation" data-i18n="opt-braces">Konsultasi Pendakap</option>
-                                    <option value="Other" data-i18n="opt-other">Lain-lain</option>
+                                <select id="bk-service" required>
+                                    <option value="" disabled selected>Loading Services...</option>
                                 </select>
                             </div>
                             
@@ -868,7 +870,39 @@
     <a href="https://wa.me/60174802238" class="float-wa" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
 
     <script>
-        // --- DATA ---
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qdqkhakhpvqodixecjdl.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkcWtoYWtocHZxb2RpeGVjamRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MDY2NzQsImV4cCI6MjA4NTk4MjY3NH0.r8sfbz70szeKvv_vrMn1JboYsGs6KMAxZyoSbmDYvhc';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // --- GLOBAL STATE ---
+        let currentLang = 'bm';
+        let services = [];
+        let isPatientRegistered = false;
+        let currentPatientName = "";
+        let debounceTimer;
+
+        // --- SMART ID GENERATOR ---
+        async function generateSmartId(table, prefix) {
+            const { data, error } = await db
+                .from(table)
+                .select('id')
+                .order('id', { ascending: false })
+                .limit(1)
+                .single();
+            
+            let nextNum = 1;
+            if (data && data.id) {
+                const parts = data.id.split('-');
+                const lastNum = parseInt(parts[parts.length - 1]);
+                if (!isNaN(lastNum)) nextNum = lastNum + 1;
+            }
+            const numStr = String(nextNum).padStart(4, '0');
+            return `${prefix}-${numStr}`;
+        }
+
+        // --- TRANSLATIONS ---
         const translations = {
             en: {
                 "current-lang": "BM", "nav-home": "Home", "nav-about": "About", "nav-services": "Services", 
@@ -888,11 +922,11 @@
                 "whitening-title": "Teeth Whitening", "whitening-2-title": "Professional Whitening", "whitening-desc": "Safe and effective whitening treatment.",
                 "implant-title": "Dental Implants", "implant-desc": "Permanent solution for missing teeth.",
                 "branch-title": "Our Branches", "branch-subtitle": "Visit us at convenient locations.",
-                "map-title": "Find Us", "form-title-lg": "Book Appointment", "form-sub-lg": "Select date to see times.",
-                "lbl-name": "Your Name", "lbl-phone": "Phone", "lbl-date": "Date", "lbl-time": "Select Time", "hours-hint": "Mon-Sat: 9am - 6pm",
+                "map-title": "Find Us", "form-title-lg": "Book Appointment", "form-sub-lg": "Please fill in the details below.",
+                "lbl-name": "Your Name", "lbl-phone": "Phone", "lbl-date": "Date", "lbl-time": "Time (Type or Voice)", "hours-hint": "Mon-Sat: 9am - 6pm",
                 "lbl-service": "Service", "opt-checkup": "Checkup", "opt-scaling": "Scaling", "opt-pain": "Pain/Emergency", "opt-braces": "Braces", "opt-other": "Other",
                 "btn-submit": "Send Request", "ty-title": "Thank You!", "ty-msg": "Booking successful. We will contact you soon.", "btn-home": "Home",
-                "error-sun": "Closed on Sundays.", "error-booked": "Slot already booked.", "select-date-prompt": "Select a date first."
+                "error-sun": "Closed on Sundays.", "error-time": "Invalid time format. Use e.g. 9:30 AM."
             },
             bm: {
                 "current-lang": "EN", "nav-home": "Utama", "nav-about": "Tentang Kami", "nav-services": "Perkhidmatan", 
@@ -912,16 +946,22 @@
                 "whitening-title": "Pemutihan Gigi", "whitening-2-title": "Pemutihan Profesional", "whitening-desc": "Rawatan pemutihan selamat dan berkesan.",
                 "implant-title": "Dental Implant", "implant-desc": "Penyelesaian kekal untuk gigi hilang.",
                 "branch-title": "Cawangan Kami", "branch-subtitle": "Kunjungi kami di lokasi berdekatan.",
-                "map-title": "Cari Kami", "form-title-lg": "Buat Temujanji", "form-sub-lg": "Pilih tarikh untuk lihat masa.",
-                "lbl-name": "Nama Anda", "lbl-phone": "Telefon", "lbl-date": "Tarikh", "lbl-time": "Pilih Masa", "hours-hint": "Isnin-Sabtu: 9pg - 6ptg",
+                "map-title": "Cari Kami", "form-title-lg": "Buat Temujanji", "form-sub-lg": "Sila isikan maklumat di bawah.",
+                "lbl-name": "Nama Anda", "lbl-phone": "Telefon", "lbl-date": "Tarikh", "lbl-time": "Masa (Taip atau Suara)", "hours-hint": "Isnin-Sabtu: 9pg - 6ptg",
                 "lbl-service": "Perkhidmatan", "opt-checkup": "Pemeriksaan", "opt-scaling": "Scaling", "opt-pain": "Sakit/Kecemasan", "opt-braces": "Pendakap", "opt-other": "Lain-lain",
                 "btn-submit": "Hantar Permintaan", "ty-title": "Terima Kasih!", "ty-msg": "Tempahan berjaya. Kami akan hubungi anda.", "btn-home": "Utama",
-                "error-sun": "Tutup pada hari Ahad.", "error-booked": "Masa ini sudah ditempah.", "select-date-prompt": "Sila pilih tarikh dahulu."
+                "error-sun": "Tutup pada hari Ahad.", "error-time": "Format masa salah. Guna cth: 9:30 PG."
             }
         };
 
-        let currentLang = 'bm';
-        document.addEventListener('DOMContentLoaded', () => { updateContent(); initScrollAnimations(); setupDateLogic(); });
+        document.addEventListener('DOMContentLoaded', async () => { 
+            updateContent(); 
+            initScrollAnimations(); 
+            setupDateLogic();
+            setupPhoneLogic();
+            setupTimeLogic();
+            await fetchServices();
+        });
 
         function toggleLanguage() { currentLang = currentLang === 'en' ? 'bm' : 'en'; updateContent(); }
         function updateContent() {
@@ -930,8 +970,18 @@
                 if(translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
             });
             document.getElementById('current-lang').innerText = translations[currentLang]['current-lang'];
-            const dateInput = document.getElementById('dateInput');
-            if(dateInput.value) generateTimeSlots(dateInput.value);
+        }
+
+        async function fetchServices() {
+            const select = document.getElementById('bk-service');
+            select.innerHTML = `<option value="" disabled selected>-- Choose Service --</option>`;
+            const { data, error } = await db.from('klinikazam_services').select('*');
+            if(!error && data) {
+                services = data;
+                data.forEach(s => {
+                    select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+                });
+            }
         }
 
         // --- SCROLL & UI ---
@@ -965,7 +1015,6 @@
             if(activeLink) activeLink.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
-            // Close mobile menu if open
             const navMenu = document.getElementById('navMenu');
             if (navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
@@ -981,67 +1030,155 @@
             icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-xmark');
         });
 
-        // --- BOOKING LOGIC ---
-        const availableTimes = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
-        function formatTime(t) { const [h,m] = t.split(':'); const ampm = +h >= 12 ? 'PM' : 'AM'; const h12 = +h % 12 || 12; return `${h12}:${m} ${ampm}`; }
+        // --- PHONE LOOKUP LOGIC ---
+        function setupPhoneLogic() {
+            const phoneInput = document.getElementById('bk-phone');
+            const statusDiv = document.getElementById('phone-status');
+            const group = document.getElementById('phone-group');
 
-        function getBookedSlots(date) {
-            const stored = localStorage.getItem('clinic_bookings');
-            const all = stored ? JSON.parse(stored) : {};
-            return all[date] || [];
-        }
-        function saveBooking(date, time) {
-            const stored = localStorage.getItem('clinic_bookings');
-            const all = stored ? JSON.parse(stored) : {};
-            if(!all[date]) all[date] = [];
-            all[date].push(time);
-            localStorage.setItem('clinic_bookings', JSON.stringify(all));
-        }
-
-        const dateInput = document.getElementById('dateInput');
-        const timeWrapper = document.getElementById('time-slot-wrapper');
-        const timeGrid = document.getElementById('timeGrid');
-        const selectedTimeInput = document.getElementById('selectedTimeInput');
-        const submitBtn = document.getElementById('submitBtn');
-
-        function setupDateLogic() {
-            const now = new Date();
-            dateInput.min = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-            dateInput.addEventListener('change', function() {
-                if(new Date(this.value).getDay() === 0) {
-                    showToast('warning', 'Info', translations[currentLang]['error-sun']);
-                    this.value = ''; timeWrapper.classList.remove('active');
+            phoneInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                const rawValue = e.target.value.replace(/[^0-9]/g, '');
+                
+                // Reset state
+                group.classList.remove('success', 'info');
+                statusDiv.classList.remove('success', 'info', 'visible');
+                isPatientRegistered = false;
+                currentPatientName = "";
+                
+                if (rawValue.length < 5) {
+                    checkFormValidity();
                     return;
                 }
-                generateTimeSlots(this.value);
+
+                // Show Loading
+                statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Checking...';
+                statusDiv.classList.add('visible');
+
+                debounceTimer = setTimeout(async () => {
+                    const { data } = await db.from('klinikazam_patients').select('name').eq('phone', rawValue).maybeSingle();
+                    
+                    if (data) {
+                        isPatientRegistered = true;
+                        currentPatientName = data.name;
+                        group.classList.add('success');
+                        statusDiv.innerHTML = `<i class="fa-solid fa-user-check"></i> Welcome back, ${data.name}`;
+                        statusDiv.className = 'live-status visible success';
+                        
+                        // Auto fill name if empty
+                        if(document.getElementById('bk-name').value === "") {
+                            document.getElementById('bk-name').value = data.name;
+                        }
+                    } else {
+                        isPatientRegistered = false;
+                        group.classList.add('info');
+                        statusDiv.innerHTML = `<i class="fa-solid fa-user-plus"></i> New Patient`;
+                        statusDiv.className = 'live-status visible info';
+                    }
+                    checkFormValidity();
+                }, 800); // 800ms delay
             });
         }
 
-        function generateTimeSlots(dateStr) {
-            timeGrid.innerHTML = ''; timeWrapper.classList.add('active');
-            getBookedSlots(dateStr).forEach(booked => {
-                // Keep track of booked slots visually
-            });
+        // --- TIME PARSING LOGIC ---
+        function setupTimeLogic() {
+            const timeInput = document.getElementById('bk-time');
+            const group = document.getElementById('time-group');
             
-            const booked = getBookedSlots(dateStr);
-            
-            availableTimes.forEach(time => {
-                const btn = document.createElement('div');
-                btn.className = 'time-slot';
-                btn.textContent = formatTime(time);
-                if(booked.includes(time)) {
-                    btn.classList.add('booked');
+            timeInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                const formatted = parseTime(val);
+                
+                if (formatted) {
+                    // Valid format found, update UI to show formatted version
+                    // Note: We don't force overwrite input while typing to avoid annoyance,
+                    // but we can change border color to green.
+                    timeInput.dataset.validTime = formatted;
+                    group.classList.add('success');
                 } else {
-                    btn.onclick = () => {
-                        document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
-                        btn.classList.add('selected');
-                        selectedTimeInput.value = time;
-                        submitBtn.disabled = false;
-                    };
+                    timeInput.dataset.validTime = "";
+                    group.classList.remove('success');
                 }
-                timeGrid.appendChild(btn);
+                checkFormValidity();
             });
-            selectedTimeInput.value = ''; submitBtn.disabled = true;
+
+            // Format nicely on blur
+            timeInput.addEventListener('blur', (e) => {
+                if(e.target.dataset.validTime) {
+                    e.target.value = e.target.dataset.validTime;
+                }
+            });
+        }
+
+        function parseTime(str) {
+            // Regex: (Hours)(separator)(Minutes)(Optional AM/PM)
+            // Supports "9:30 am", "09 30 pm", "9.30am"
+            const regex = /^(\d{1,2})[:.\s](\d{2})\s*([ap]m)?$/i;
+            const match = str.match(regex);
+            
+            if (match) {
+                let hours = parseInt(match[1]);
+                let minutes = match[2];
+                let meridiem = match[3] ? match[3].toUpperCase() : null;
+
+                // Default to AM if unspecified? Or strictly require. 
+                // Let's require for clarity, or default to AM for morning hours.
+                // To be safe with user input "listen and type", let's be flexible.
+                
+                if (hours < 1 || hours > 12) return null;
+                if (parseInt(minutes) > 59) return null;
+
+                // If user typed "9:00" (no AM/PM), assume based on typical clinic hours?
+                // Let's force user to specify or default to AM for 1-11, PM for 12?
+                // Safest is to return null if AM/PM is missing to avoid 9:00 PM being booked for 9:00 AM.
+                if (!meridiem) return null;
+
+                return `${String(hours).padStart(2, '0')}:${minutes} ${meridiem}`;
+            }
+            return null;
+        }
+
+        // --- DATE LOGIC ---
+        function setupDateLogic() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1); 
+            
+            dateInput.min = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
+            
+            dateInput.addEventListener('change', async function() {
+                const selectedDate = new Date(this.value);
+                if(selectedDate.getDay() === 0) {
+                    showToast('warning', 'Info', translations[currentLang]['error-sun']);
+                    this.value = ''; 
+                    checkFormValidity();
+                    return;
+                }
+
+                const { data: closedDay } = await db.from('klinikazam_slots').select('*').eq('date', this.value).eq('type', 'closed').single();
+                if(closedDay) {
+                    showToast('warning', 'Info', 'Clinic is closed on this date.');
+                    this.value = ''; 
+                    checkFormValidity();
+                    return;
+                }
+                checkFormValidity();
+            });
+        }
+
+        function checkFormValidity() {
+            const btn = document.getElementById('submitBtn');
+            const date = document.getElementById('dateInput').value;
+            const time = document.getElementById('bk-time').dataset.validTime;
+            const service = document.getElementById('bk-service').value;
+            const phone = document.getElementById('bk-phone').value.replace(/[^0-9]/g, '').length;
+            
+            // Valid if: Date picked, Time format valid, Service picked, Phone > 5 digits
+            if(date && time && service && phone >= 5) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
         }
 
         function showToast(type, title, msg) {
@@ -1056,28 +1193,72 @@
             setTimeout(() => { t.classList.remove('show'); setTimeout(()=>t.remove(), 300); }, 3000);
         }
 
-        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+        document.getElementById('appointmentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if(!selectedTimeInput.value) return showToast('warning', 'Error', translations[currentLang]['select-date-prompt']);
             
-            const btn = submitBtn;
-            const old = btn.innerHTML;
-            btn.innerHTML = '<div class="spinner"></div>';
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner"></div> Processing...';
             btn.disabled = true;
 
-            setTimeout(() => {
-                saveBooking(dateInput.value, selectedTimeInput.value);
-                fetch(this.action, { method: 'POST', body: new FormData(this) })
-                .then(() => {
-                    showToast('success', 'Done', translations[currentLang]['ty-msg']);
-                    setTimeout(() => { switchPage('thank-you'); btn.innerHTML = old; btn.disabled = false; this.reset(); timeWrapper.classList.remove('active'); }, 1500);
-                })
-                .catch(() => {
-                    // Fallback for demo
-                    showToast('success', 'Done', translations[currentLang]['ty-msg']);
-                    setTimeout(() => { switchPage('thank-you'); btn.innerHTML = old; btn.disabled = false; this.reset(); timeWrapper.classList.remove('active'); }, 1500);
-                });
-            }, 1000);
+            try {
+                const name = document.getElementById('bk-name').value;
+                const phone = document.getElementById('bk-phone').value.replace(/[^0-9]/g, '');
+                const dateStr = document.getElementById('dateInput').value;
+                const timeStr = document.getElementById('bk-time').dataset.validTime; // Use the formatted version
+                
+                const serviceId = parseInt(document.getElementById('bk-service').value);
+                const service = services.find(s => s.id === serviceId) || { name: 'General Checkup', price: 0 };
+
+                // 1. Check/Create Patient
+                let patientId;
+                if (isPatientRegistered) {
+                    // Find ID again (already have name from lookup)
+                    const { data } = await db.from('klinikazam_patients').select('id').eq('phone', phone).single();
+                    patientId = data.id;
+                } else {
+                    const pId = await generateSmartId('klinikazam_patients', 'PAT');
+                    const { error: pError } = await db.from('klinikazam_patients').insert([{
+                        id: pId, name: name, phone: phone, ic: '-'
+                    }]);
+                    if(pError) throw pError;
+                    patientId = pId;
+                }
+
+                // 2. Create Appointment
+                const aptId = await generateSmartId('klinikazam_appointments', 'APT');
+                const { error: aError } = await db.from('klinikazam_appointments').insert([{
+                    id: aptId,
+                    patient_id: patientId,
+                    date: dateStr,
+                    time: timeStr, // Stored as "09:30 AM"
+                    items: [{ id: serviceId, qty: 1, price: service.price }],
+                    status: 'Pending',
+                    payment_method: 'CASH',
+                    invoice_id: null
+                }]);
+
+                if(aError) throw aError;
+
+                showToast('success', 'Done', translations[currentLang]['ty-msg']);
+                setTimeout(() => { 
+                    switchPage('thank-you'); 
+                    btn.innerHTML = originalText; 
+                    btn.disabled = false; 
+                    this.reset(); 
+                    // Reset custom UI states
+                    document.getElementById('phone-group').classList.remove('success', 'info');
+                    document.getElementById('phone-status').classList.remove('visible', 'success', 'info');
+                    document.getElementById('time-group').classList.remove('success');
+                    document.getElementById('bk-time').dataset.validTime = "";
+                }, 1500);
+
+            } catch (err) {
+                console.error(err);
+                showToast('warning', 'Error', 'Something went wrong. Please try again.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
